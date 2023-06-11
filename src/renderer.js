@@ -165,17 +165,6 @@ document.getElementById('modal-input').addEventListener('keydown', (event) => {
     }
 });
 
-document.getElementById('next-btn').addEventListener('click', () => {
-    nextRecord();
-});
-
-/**
- * EVENT: Previous button clicked.
- */
-document.getElementById('prev-btn').addEventListener('click', () => {
-    previousRecord();
-});
-
 /**
  * Display a record.
  */
