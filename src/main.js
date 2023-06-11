@@ -19,8 +19,12 @@ app.disableHardwareAcceleration();
 // Create the application window.
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1024,
-        height: 768,
+        width: 850,
+        height: 600,
+        minWidth: 850,
+        minHeight: 250,
+        backgroundColor: '#1e1e1e',
+        darkTheme: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
