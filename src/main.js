@@ -1,7 +1,14 @@
 // main.js
 const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain, globalShortcut } = require('electron');
+const rootPath = require('electron-root-path').rootPath;
+const path = require('path');
 const fs = require('fs');
 const Papa = require('papaparse');
+
+// Read the app title from package.json
+const packagePath = path.join(rootPath, 'package.json');
+const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
+const appTitle = packageData.productName;
 
 let mainWindow;
 
@@ -145,4 +152,12 @@ function watchFile(filePath) {
             mainWindow.webContents.send('file-data', data.data);
         }
     });
+}
+
+function setWindowTitle(newTitle) {
+    if (!newTitle) {
+        mainWindow.setTitle(appTitle);
+        return;
+    }
+    mainWindow.setTitle(`${appTitle} - ${newTitle}`);
 }
