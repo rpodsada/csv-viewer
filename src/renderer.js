@@ -772,8 +772,8 @@ function highlightSearchTerm(field, content, searchTerm, searchColumn) {
     if (searchColumn && field !== searchColumn) {
         return content;
     }
-    if (content.includes(searchTerm)) {
-        const regex = new RegExp(searchTerm, 'gi');
+    const regex = new RegExp(searchTerm, 'gi');
+    if (regex.test(content)) {
         content = content.replace(regex, '<mark>$&</mark>');
     } 
     return content;
