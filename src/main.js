@@ -1,5 +1,5 @@
 // main.js
-const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain } = require('electron');
+const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain, globalShortcut } = require('electron');
 const fs = require('fs');
 const Papa = require('papaparse');
 
@@ -27,6 +27,37 @@ function createWindow() {
         }
     });
     mainWindow.loadFile('src/index.html');
+
+    // Register the global shortcut for Ctrl+0 (reset zoom)
+    globalShortcut.register('CommandOrControl+0', () => {
+        mainWindow.webContents.setZoomLevel(0);
+    });
+
+    // Register the global shortcut for Ctrl++ (increase zoom)
+    globalShortcut.register('CommandOrControl+=', () => {
+        const currentZoomLevel = mainWindow.webContents.getZoomLevel();
+        mainWindow.webContents.setZoomLevel(currentZoomLevel + 1);
+    });
+
+    // Register the global shortcut for Ctrl+- (decrease zoom)
+    globalShortcut.register('CommandOrControl+-', () => {
+        const currentZoomLevel = mainWindow.webContents.getZoomLevel();
+        mainWindow.webContents.setZoomLevel(currentZoomLevel - 1);
+    });
+
+    // Register the global shortcut for Ctrl+R (refresh)
+    globalShortcut.register('CommandOrControl+R', () => {
+        mainWindow.reload();
+    });
+
+    // Register the global shortcut for Ctrl+Shift+I (toggle developer tools)
+    globalShortcut.register('CommandOrControl+Shift+I', () => {
+        mainWindow.webContents.toggleDevTools();
+    });
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
 }
 
 // Create the application menu
