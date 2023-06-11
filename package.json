@@ -34,10 +34,10 @@
             "category": "Utility",
             "icon": "icons/linux/512x512.png",
             "target": [
-              "AppImage",
-              "deb"
+                "AppImage",
+                "deb"
             ]
-          },
+        },
         "nsis": {
             "oneClick": false,
             "allowToChangeInstallationDirectory": true
@@ -66,11 +66,13 @@
             "fonts/**/*",
             "package.json"
         ]
-    },   
+    },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.0",
         "highlight.js": "^11.8.0",
         "html": "^1.0.0",
         "papaparse": "^5.4.1",
+        "path": "^0.12.7",
         "save-dev": "^0.0.1-security"
     },
     "devDependencies": {

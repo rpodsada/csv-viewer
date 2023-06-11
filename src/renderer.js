@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const hljs = require('highlight.js'); // Import the library
 const html = require('html');
+require("@fortawesome/fontawesome-free/js/all");
 
 let records = [];
 let currentIndex = 0;
