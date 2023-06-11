@@ -473,7 +473,10 @@ function prettyHTML(htmlString) {
     return hljs.highlight(
         html.prettyPrint(
             htmlString,
-            { indent_size: 4 }
+            {
+                indent_size: 3,
+                max_char: 60,
+            }
         ),
         { language: 'html' }
     ).value;
