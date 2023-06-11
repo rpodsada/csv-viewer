@@ -125,6 +125,10 @@ const openFile = async () => {
         properties: ['openFile'],
         filters: [{ name: 'CSV', extensions: ['csv'] }],
     });
+    if (!filePaths || filePaths.length === 0 || !filePaths[0]) {
+        console.log("No file chosen in dialog. Doing nothing.")
+        return null;
+    }
     const filePath = filePaths[0];
     watchFile(filePath);
     return filePath;

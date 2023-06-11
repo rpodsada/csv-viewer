@@ -22,6 +22,10 @@ let modalOpen = false;
  * Parse resulting CSV once chosen.
  */
 ipcRenderer.invoke('open-csv').then((filePath) => {
+    if (!filePath) {
+        console.log("File path received from dialog was empty. Aborting file load.")
+        return;
+    }
     ipcRenderer.invoke('parse-csv', filePath).then((result) => {
         records = result.data;
         displayRecord(currentIndex);
