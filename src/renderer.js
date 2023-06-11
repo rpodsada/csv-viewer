@@ -9,7 +9,8 @@ let recordsPerPage = 10;
 let lastSearchTerm = '';
 let lastSearchMode = null;
 let lastSearchColumn = null;
-let lastSearchFound = false;
+let collapsedState = {};
+
 
 let modal = document.getElementById('input-modal');
 let modalInput = document.getElementById('modal-input');
@@ -113,8 +114,7 @@ document.addEventListener('keydown', (event) => {
 /**
  * Navigation buttons clicked.
  */
-const navButtons = document.querySelectorAll('button.navigation-button');
-navButtons.forEach((element) => {
+document.querySelectorAll('button.navigation-button').forEach((element) => {
     element.addEventListener('click', (event) => {
         const navAction = event.target.getAttribute('data-nav-action');
         if (!navAction) {
@@ -169,23 +169,44 @@ document.getElementById('modal-input').addEventListener('keydown', (event) => {
  * Display a record.
  */
 function displayRecord(index) {
+    const arrowUp = `Collapse <i class="fa fa-caret-up"></i>`;
+    const arrowDown = `Expand <i class="fa fa-caret-down"></i>`;
     const record = records[index];
+    const htmlTagRegex = /<([a-z][a-z0-9]*)\b[^>]*>/i;
     if (record) {
         const container = document.getElementById('record-container');
         container.innerHTML = `<div id="record-number">${index + 1}</div>`;
 
         let innerTable = `<table id="record-display">`;
         for (const key in record) {
-            if (key === 'description') {
-                innerTable += `<tr><th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th><td><pre><code>${prettyHTML(record[key])}</code></pre></td></tr>`;
-            } else {
-                innerTable += `<tr><th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th><td>${record[key]}</td></tr>`;
-            }
+
+            if (typeof record[key] === 'string' && htmlTagRegex.test(record[key])) {
+                const isCollapsed = collapsedState[key] === true;
+                innerTable += `
+                    <tr>
+                        <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
+                        <td>
+                            <div class="collapsible-cell ${isCollapsed ? 'collapsed' : ''}">
+                                <button class="collapse-expand-btn">${isCollapsed ? arrowDown : arrowUp}</button>
+                                <div class="collapsible-content" ${isCollapsed ? ' style="height: 1.2em; overflow: hidden;"' : ''}>
+                                    <pre><code>${prettyHTML(record[key])}</code></pre>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+              } else {
+                innerTable += `
+                    <tr>
+                        <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
+                        <td>${record[key]}</td>
+                    </tr>`;
+              }
         }
         innerTable += `</table>`;
 
         container.innerHTML += innerTable;
 
+        // Activate click on CSV columns
         const csvColumns = document.querySelectorAll('th.csv-column');
         csvColumns.forEach((element) => {
             element.addEventListener('click', (event) => {
@@ -204,6 +225,32 @@ function displayRecord(index) {
                 showModal();
             });
         });
+
+        // Add event listener to the parent table element using event delegation
+        document.querySelector('#record-display').addEventListener('click', (event) => {
+            const button = event.target.closest('.collapse-expand-btn');
+            if (button) {
+                const collapsibleCell = button.parentElement;
+                const row = button.closest('tr');
+                const key = row.querySelector('th').getAttribute('data-column-name');
+                const collapsibleContent = row.querySelector('.collapsible-content');
+                const isCollapsed = collapsibleCell.classList.contains('collapsed');
+
+                collapsibleCell.classList.toggle('collapsed');
+                if (isCollapsed) {
+                    button.innerHTML = arrowUp;
+                    collapsibleContent.style.height = 'auto';
+                    collapsibleContent.style.overflow = 'visible';
+                    collapsedState[key] = false;
+                } else {
+                    button.innerHTML = arrowDown;
+                    collapsibleContent.style.height = '1.2em';
+                    collapsibleContent.style.overflow = 'hidden';
+                    collapsedState[key] = true;
+                }
+            }
+        });
+
     }
 }
 
@@ -221,7 +268,7 @@ function doCommand(command) {
             modalInput.type = 'number';
             modalHeading.textContent = `Jump to Record`;
             modalInstructions.textContent = `Enter a record number to jump to between 1 and ${(records.length - 1)}.`;
-                    break;
+            break;
         default:
             return;
     }
@@ -256,9 +303,8 @@ function handleModalInput() {
         hideModal();
         rememberSearch('find', inputValue, null);
         if (!searchData(inputValue)) {
-            
             console.log(`No records found for ${inputValue}`)
-        } 
+        }
     }
     if (modalCommand === 'find-column') {
         const csvColumn = modal.getAttribute('data-column');
@@ -334,7 +380,7 @@ function searchData(searchText, searchColumn, startRecord) {
         currentIndex = matchingIndex;
         displayRecord(currentIndex);
         return true;
-    } 
+    }
     return false;
 }
 
