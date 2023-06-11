@@ -297,7 +297,6 @@ function handleModalInput() {
         hideModal();
         jumpToRecord(recordNumber);
     }
-    let searchResult = false;
     if (modalCommand === 'find') {
         console.log(`Process find command for ${inputValue} in any column`);
         hideModal();
