@@ -1,8 +1,10 @@
+// Imports
 const { ipcRenderer } = require('electron');
-const hljs = require('highlight.js'); // Import the library
+const hljs = require('highlight.js');
 const html = require('html');
 require("@fortawesome/fontawesome-free/js/all");
 
+// State
 let records = [];
 let currentIndex = 0;
 let recordsPerPage = 10;
@@ -11,7 +13,7 @@ let lastSearchMode = null;
 let lastSearchColumn = null;
 let collapsedState = {};
 
-
+// Modal
 let modal = document.getElementById('input-modal');
 let modalInput = document.getElementById('modal-input');
 let modalHeading = document.getElementById('modal-header');
@@ -150,14 +152,14 @@ document.querySelectorAll('button.navigation-button').forEach((element) => {
 });
 
 /**
- * EVENT: Hit Go button on modal
+ * Hit Go button on modal
  */
 document.getElementById('modal-ok-btn').addEventListener('click', () => {
     handleModalInput();
 });
 
 /**
- * EVENT: Hit enter on modal input field.
+ * Hit enter on modal input field.
  */
 document.getElementById('modal-input').addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
