@@ -20,30 +20,17 @@ let modalHeading = document.getElementById('modal-header');
 let modalInstructions = document.getElementById('modal-instructions');
 let modalOpen = false;
 
-/**
- * Open file dialog to choose a CSV file on startup.
- * Parse resulting CSV once chosen.
- */
-ipcRenderer.invoke('open-csv').then((filePath) => {
-    if (!filePath) {
-        console.log("File path received from dialog was empty. Aborting file load.")
-        return;
-    }
-    ipcRenderer.invoke('parse-csv', filePath).then((result) => {
-        records = result.data;
-        displayRecord(currentIndex);
-    });
-});
+// Open file dialog to choose a CSV file on startup
+ipcRenderer.send('open-csv');
 
 /**
  * Listen for changes to the file data and update the display.
  */
 ipcRenderer.on('file-data', (event, data) => {
-    records = data;
-    let maxRecords = records.length - 1;
-    if (currentIndex > maxRecords) {
-        currentIndex = maxRecords;
-    }
+    console.log(`File data changed, loading ${data.length} records...`);
+    showAlert(`${highlight(data.length)} records loaded.`);
+    currentIndex = 0;
+    setRecords(data);
     displayRecord(currentIndex);
 });
 

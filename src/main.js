@@ -11,6 +11,7 @@ const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
 const appTitle = packageData.productName;
 
 let mainWindow;
+let fileDialogOpen = false;
 
 // Detect system's dark mode setting
 if (nativeTheme.shouldUseDarkColors) {
@@ -59,6 +60,11 @@ function createWindow() {
     // Register the global shortcut for Ctrl+R (refresh)
     globalShortcut.register('CommandOrControl+R', () => {
         mainWindow.reload();
+    });
+
+    // Register the global shortcut for Ctrl+R (refresh)
+    globalShortcut.register('CommandOrControl+O', () => {
+        openFile();
     });
 
     // Register the global shortcut for Ctrl+Shift+I (toggle developer tools)
@@ -115,36 +121,47 @@ app.on('activate', () => {
     }
 });
 
-// Show file open dialog
-ipcMain.handle('open-csv', async () => {
-    return await openFile();
-});
-
-// Parse the CSV
-ipcMain.handle('parse-csv', async (event, path) => {
-    const file = fs.readFileSync(path, 'utf8');
-    return Papa.parse(file, { header: true });
+// Open file dialog and handle selected file
+ipcMain.on('open-csv', async (event) => {
+    console.log("main: received open-csv ipc event");
+    await openFile();
 });
 
 // Open file dialog and handle selected file
 const openFile = async () => {
+    if (fileDialogOpen) {
+        console.log("File dialog already open, doing nothing.");
+        return;
+    }
+    console.log("Showing file open dialog...");
+    fileDialogOpen = true;
     const { filePaths } = await dialog.showOpenDialog({
         properties: ['openFile'],
         filters: [{ name: 'CSV', extensions: ['csv'] }],
     });
+    fileDialogOpen = false;
     if (!filePaths || filePaths.length === 0 || !filePaths[0]) {
-        console.log("No file chosen in dialog. Doing nothing.")
+        console.log("No file chosen in dialog. Doing nothing.");
+        
         return null;
     }
+
     const filePath = filePaths[0];
+    console.log(`Opening ${filePath}...`);
+    const file = fs.readFileSync(filePath, 'utf8');
+    const data = Papa.parse(file, { header: true });
+    
+    setWindowTitle(filePath);
     watchFile(filePath);
-    return filePath;
+    mainWindow.webContents.send('file-data', data.data);
 };
 
 // Watches the file at filePath for changes, 
 // and triggers sending new data if it changed.
 function watchFile(filePath) {
+    console.log(`Setting watch on ${filePath}.`);
     fs.watch(filePath, (eventType) => {
+        console.log(`watch [${filePath}]: ${eventType} fired.`);
         if (eventType === 'change') {
             console.log(`File at ${filePath} modified, reloading data`);
             const file = fs.readFileSync(filePath, 'utf8');
