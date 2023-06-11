@@ -1,0 +1,152 @@
+@font-face {
+    font-family: 'Consolas';
+    src: url('../fonts/consola.ttf') format('truetype');
+    /* Regular */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Consolas';
+    src: url('../fonts/consolab.ttf') format('truetype');
+    /* Bold */
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Consolas';
+    src: url('../fonts/consolai.ttf') format('truetype');
+    /* Italic */
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Consolas';
+    src: url('../fonts/consolaz.ttf') format('truetype');
+    /* Bold-Italic */
+    font-weight: bold;
+    font-style: italic;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#record-container {
+    padding: 20px;
+    overflow-y: auto;
+    height: calc(100% - 60px);
+}
+
+#record-number {
+    display: inline-block;
+    background: #666;
+    color: #fff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20%;
+    position: fixed;
+    top: 10px;
+    right: 25px;
+}
+
+#record-display {
+    display: table;
+    border: 1px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+#record-display th,
+#record-display td {
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: left;
+    vertical-align: top;
+    font-size: 14px;
+    font-family: Consolas, monospace;
+}
+
+#record-display th {
+    font-weight: bold;
+    background: #ccc;
+    border-color: #fff;
+    cursor: pointer;
+}
+
+#record-display th:hover {
+    background: #c0c0c0;
+}
+
+
+.navigation-buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button {
+    margin: 0;
+    background: #333;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 0;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#modal-header {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+#modal-instructions {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+#modal-input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.modal-content .highlight {
+    color: rgb(70, 123, 221);
+}

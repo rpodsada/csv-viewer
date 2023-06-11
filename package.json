@@ -1,0 +1,80 @@
+{
+    "name": "csv-viewer",
+    "productName": "CSV Viewer",
+    "version": "1.0.0",
+    "homepage": "https://www.github.com/rpodsada/csv-viewer#readme",
+    "description": "A simple form-style viewer to inspect records in a CSV file.",
+    "author": "Richard Podsada <rpodsada@gmail.com> (https://www.github.com/rpodsada)",
+    "license": "MIT",
+    "copyright": "Copyright (c) 2023 ${author}",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:windows": "electron-builder --windows",
+        "build:mac": "electron-builder --mac",
+        "build:linux": "electron-builder --linux"
+    },
+    "build": {
+        "appId": "com.richardpodsada.csv-viewer",
+        "productName": "CSV Viewer",
+        "artifactName": "csv-viewer-setup-${version}.${ext}",
+        "directories": {
+            "output": "dist"
+        },
+        "win": {
+            "target": "nsis",
+            "icon": "icons/win/icon.ico"
+        },
+        "mac": {
+            "target": "dmg",
+            "icon": "icons/mac/icon.icns"
+        },
+        "linux": {
+            "category": "Utility",
+            "icon": "icons/linux/512x512.png",
+            "target": [
+              "AppImage",
+              "deb"
+            ]
+          },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        },
+        "deb": {
+            "maintainer": "${author}"
+        },
+        "dmg": {
+            "contents": [
+                {
+                    "x": 130,
+                    "y": 220,
+                    "type": "link",
+                    "path": "/Applications"
+                },
+                {
+                    "x": 410,
+                    "y": 220,
+                    "type": "file"
+                }
+            ]
+        },
+        "files": [
+            "src/**/*",
+            "node_modules/**/*",
+            "fonts/**/*",
+            "package.json"
+        ]
+    },   
+    "dependencies": {
+        "highlight.js": "^11.8.0",
+        "html": "^1.0.0",
+        "papaparse": "^5.4.1",
+        "save-dev": "^0.0.1-security"
+    },
+    "devDependencies": {
+        "electron": "^25.1.0",
+        "electron-builder": "^24.4.0"
+    }
+}

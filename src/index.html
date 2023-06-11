@@ -1,0 +1,43 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CSV Viewer</title>
+    <link rel="stylesheet" type="text/css" href="styles-dark.css">
+    <link rel="stylesheet" type="text/css" href="highlight.css">
+</head>
+
+<body>
+    <div id="record-container">
+        <!-- The data will be injected here by renderer.js -->
+    </div>
+    <div class="navigation-buttons">
+        <div class="button-set button-set-left">
+            <button class="navigation-button" data-nav-action="first">First</button>
+            <button class="navigation-button" data-nav-action="prev-page">Prev x10</button>
+            <button class="navigation-button" data-nav-action="prev">Prev</button>
+            <button class="navigation-button" data-nav-action="next">Next</button>
+            <button class="navigation-button" data-nav-action="next-page">Next x10</button>
+            <button class="navigation-button" data-nav-action="last">Last</button>
+        </div>
+        <div class="button-set button-set-right">
+            <button class="navigation-button" data-nav-action="jump">Jump</button>
+            <button class="navigation-button" data-nav-action="find">Find</button>
+        </div>
+    </div>
+
+    <!-- Input Modal -->
+    <div id="input-modal" class="modal">
+        <div class="modal-content">
+            <div id="modal-header"></div>
+            <div id="modal-instructions"></div>
+            <input type="text" id="modal-input">
+            <button id="modal-ok-btn">Go</button>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
