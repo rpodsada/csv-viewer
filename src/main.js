@@ -1,18 +1,14 @@
 // main.js
 const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain, globalShortcut } = require('electron');
-const rootPath = require('electron-root-path').rootPath;
 const path = require('path');
 const fs = require('fs');
 const Papa = require('papaparse');
 
-// Read the app title from package.json
-const packagePath = path.join(rootPath, 'package.json');
-const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf-8'));
-const appTitle = packageData.productName;
+// Used to set window title.
+const appTitle = 'CSV Viewer';
 
 let mainWindow;
 let fileDialogOpen = false;
-
 
 // Prevent errors on Windows X-Server
 //app.disableHardwareAcceleration();
