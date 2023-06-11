@@ -41,6 +41,14 @@ html {
     color: #abb2bf;
 }
 
+mark {
+    background:#caa621;
+    color:#000;
+}
+.highlight {
+    color: #61afef;
+}
+
 #record-container {
     padding: 20px;
     overflow-y: auto;
@@ -91,7 +99,7 @@ html {
     font-weight: bold;
     background: #292929;
     border-color: #343434;
-    color:#c5ac3a;
+    color: #caa621;
     cursor: pointer;
     text-align: right;
 }
@@ -111,7 +119,7 @@ pre {
 }
 
 .collapsible-cell.collapsed code {
-    opacity:0.5;
+    opacity: 0.5;
 }
 
 button.collapse-expand-btn {
@@ -138,21 +146,10 @@ button.collapse-expand-btn {
     align-items: center;
 }
 
-.navigation-buttons .button-set {
+.button-set {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-button {
-    margin: 0;
-    background: #4b5363;
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 3px;
-    border: 0;
-    font-weight: normal;
-    font-size: 14px;
 }
 
 .button-set-left button {
@@ -171,8 +168,24 @@ button {
     margin-left: 0;
 }
 
+button {
+    margin: 0;
+    background: #4b5363;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 3px;
+    border: 0;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+
 button:hover {
     background: #667288;
+}
+
+button i {
+    pointer-events: none;
 }
 
 button[disabled="disabled"],
@@ -204,6 +217,8 @@ button.disabled {
     background-color: #2c323d;
     text-align: center;
     border-radius: 10px;
+    min-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 #modal-header {
@@ -223,17 +238,61 @@ button.disabled {
     width: 80%;
     padding: 8px;
     margin-bottom: 10px;
-    font-size: 18px;
-    background-color: #2c323d;
+    font-size: 16px;
+    background-color: #121519;
     color: #abb2bf;
     border: none;
     border-radius: 5px;
 }
 
-#modal-input[type="number"] {
-    width: 40%;
+input:focus,
+input:active:focus,
+input.active:focus,
+input.focus,
+input:active.focus,
+input.active.focus {
+    outline: 2px solid #61afef !important;
 }
 
-.modal-content .highlight {
-    color: #61afef;
+#modal-input[type="number"] {
+    width: 100px;
+}
+
+.modal-content button {
+    padding: 8px 16px;
+}
+
+/*************************************************
+ * Alerts
+ *************************************************/
+
+#alert-container {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #caa621;
+    color: #121519;
+    padding: 15px 15px 13px;
+    line-height: 1;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: opacity 2s;
+    opacity: 0;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+#alert-container.show {
+    transition: opacity 0.25s;
+    opacity: 1;
+}
+
+#alert-container.hide {
+    transition: opacity 0s;
+    opacity: 0;
+}
+
+#alert-container .highlight {
+    color: #000;
+    font-weight: bold;
 }

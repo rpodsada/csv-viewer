@@ -13,16 +13,9 @@ const appTitle = packageData.productName;
 let mainWindow;
 let fileDialogOpen = false;
 
-// Detect system's dark mode setting
-if (nativeTheme.shouldUseDarkColors) {
-    // Enable dark mode
-    app.on('ready', () => {
-        app.commandLine.appendSwitch('force-dark-mode');
-    });
-}
 
 // Prevent errors on Windows X-Server
-app.disableHardwareAcceleration();
+//app.disableHardwareAcceleration();
 
 // Create the application window.
 function createWindow() {
