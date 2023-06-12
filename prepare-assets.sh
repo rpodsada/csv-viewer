@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # Ensure directory exists
-if [ ! -d "./build/" ]; then
-    mkdir build/
-fi
+mkdir -p build/
 
 # Copy index.html
 cp src/index.html build/
