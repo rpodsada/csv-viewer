@@ -7,11 +7,6 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 // Reload app on changes.
-// require('electron-reload')(__dirname, {
-//     electron: require(path.join(__dirname, '..', 'node_modules', 'electron')),
-//     hardResetMethod: 'exit'
-// });
-
 require('electron-reload')(__dirname, {
     hardResetMethod: 'exit'
 });
@@ -39,7 +34,7 @@ function createWindow() {
             contextIsolation: false,
         }
     });
-    mainWindow.loadFile('index.html');
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
 
     // Register the global shortcut for Ctrl+0 (reset zoom)
     globalShortcut.register('CommandOrControl+0', () => {
@@ -130,6 +125,7 @@ ipcMain.on('open-csv', async () => {
 
 // Open file dialog and handle selected file
 const openFile = async () => {
+    console.log("openFile called.");
     if (fileDialogOpen) {
         console.log("File dialog already open, doing nothing.");
         return;
