@@ -4,9 +4,17 @@ const fs = require('fs');
 const Papa = require('papaparse');
 
 // Reload app on changes.
-require('electron-reload')(__dirname, {
-    hardResetMethod: 'exit'
-});
+if (process.env.NODE_ENV === 'development') {
+    require('electron-reload')(__dirname, {
+        electron: require(path.join(
+            __dirname,
+            '..',
+            'node_modules',
+            'electron'
+        )),
+        hardResetMethod: 'exit'
+    });
+}
 
 // Used to set window title.
 const appTitle = 'CSV Viewer';

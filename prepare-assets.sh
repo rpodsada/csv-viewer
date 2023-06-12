@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Ensure directory exists
+# Ensure directories exist
 mkdir -p build/
+mkdir -p build/css/
+mkdir -p build/fonts/
 
 # Copy index.html
 cp src/index.html build/
 
 # Copy css/
-cp -a src/css/ build/
+cp -r src/css/* build/css/
 
 # Copy fonts/
-cp -a src/fonts/ build/
+cp -r src/fonts/* build/fonts/
