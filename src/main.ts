@@ -1,7 +1,3 @@
-import { readFile } from "fs";
-import { EventEmitter } from "stream";
-
-// main.js
 const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');

@@ -9,7 +9,8 @@
     "copyright": "Copyright (c) 2023 ${author}",
     "main": "build/main.js",
     "scripts": {
-        "start": "npm run prepare-assets && tsc --watch & npm run start:electron",
+        "start": "npm run prepare-assets && tsc-watch --onSuccess \"npm run start:electron\"",
+        "start:mac": "npm run prepare-assets && tsc -w & npm run start:electron",
         "start:electron": "electron ./build/main.js",
         "build": "tsc && npm run prepare-assets && electron-builder",
         "build:windows": "tsc && npm run prepare-assets && electron-builder --windows",
@@ -75,10 +76,10 @@
         "html": "^1.0.0",
         "papaparse": "^5.4.1",
         "path": "^0.12.7",
-        "save-dev": "^0.0.1-security"
+        "save-dev": "^0.0.1-security",
+        "tsc-watch": "^6.0.4"
     },
     "devDependencies": {
-        "@types/electron": "^1.6.10",
         "@types/node": "^20.3.0",
         "electron": "^25.1.0",
         "electron-builder": "^24.4.0",
