@@ -112,6 +112,8 @@ input.active.focus {
     color: #caa621;
     cursor: pointer;
     text-align: right;
+    width: 20%;
+    white-space: nowrap;
 }
 
 #record-display th:hover {
