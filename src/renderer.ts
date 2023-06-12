@@ -107,6 +107,9 @@ appWindow?.addEventListener('dragleave', (event: DragEvent) => {
 
 /**
  * Handle files dropped onto app.
+ * 
+ * @param event The drag event.
+ * @returns void
  */
 appWindow?.addEventListener('drop', (event: DragEvent) => {
     event.preventDefault();
@@ -125,6 +128,9 @@ appWindow?.addEventListener('drop', (event: DragEvent) => {
 
 /**
  * Handle keyboard shortcuts.
+ * 
+ * @param event The keyboard event.
+ * @returns void
  */
 document.addEventListener('keydown', (event) => {
     if (modalOpen) {
@@ -197,6 +203,9 @@ document.addEventListener('keydown', (event) => {
 
 /**
  * Navigation buttons clicked.
+ * 
+ * @param event The click event.
+ * @returns void
  */
 document.querySelectorAll('button.navigation-button').forEach((element) => {
     element.addEventListener('click', (event: Event) => {
@@ -246,14 +255,20 @@ document.querySelectorAll('button.navigation-button').forEach((element) => {
 });
 
 /**
- * Hit Go button on modal
+ * Go button on modal clicked.
+ * 
+ * @param event The click event.
+ * @returns void
  */
 document.getElementById('modal-ok-btn')?.addEventListener('click', () => {
     handleModalInput();
 });
 
 /**
- * Close button on modal
+ * Close button on modal clicked.
+ * 
+ * @param event The click event.
+ * @returns void
  */
 document.getElementById('modal-close-btn')?.addEventListener('click', () => {
     hideModal();
@@ -261,6 +276,9 @@ document.getElementById('modal-close-btn')?.addEventListener('click', () => {
 
 /**
  * Hit enter on modal input field.
+ * 
+ * @param event The keydown event.
+ * @returns void
  */
 document.getElementById('modal-input')?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -270,8 +288,11 @@ document.getElementById('modal-input')?.addEventListener('keydown', (event) => {
 
 /**
  * Display a record.
+ * 
+ * @param index The index of the record to display.
+ * @returns void
  */
-function displayRecord(index: number): void {
+function displayRecord(index: number) {
     // Get the chosen record.
     const record = getRecord(index);
     if (!record) {
@@ -362,6 +383,10 @@ function displayRecord(index: number): void {
 
 /**
  * Execute a command
+ * 
+ * @param command The command to execute.
+ * @param args Any arguments to pass to the command.
+ * @returns void
  */
 function doCommand(command: string, args: { [key:string]: any } = {}): void {
     if (!modal || !modalInput || !modalHeading || !modalInstructions) {
@@ -400,6 +425,11 @@ function doCommand(command: string, args: { [key:string]: any } = {}): void {
 
 /**
  * Search the data for some text.
+ * 
+ * @param searchText The text to search for.
+ * @param searchColumn The column to search in (optional).
+ * @param startRecord The record to start searching from (optional).
+ * @returns void
  */
 function searchData(searchText: string, searchColumn: string = '', startRecord: number = 0) {
     const matchingIndex = findRecordIndex(searchText, searchColumn, startRecord);
@@ -420,6 +450,10 @@ function searchData(searchText: string, searchColumn: string = '', startRecord: 
 
 /**
  * Get the index of a record which contains searchText in any of the fields.
+ * 
+ * @param searchText The text to search for.
+ * @param searchColumn The column to search in (optional).
+ * @param startRecord The record to start searching from (optional).
  */
 function findRecordIndex(searchText: string, searchColumn: string, startRecord: number) {
     let firstRecord = 0;
@@ -451,6 +485,8 @@ function findRecordIndex(searchText: string, searchColumn: string, startRecord: 
 
 /**
  * Handle the modal input.
+ * 
+ * @returns void
  */
 function handleModalInput() {
     if (!modal || !modalInput) {
@@ -497,6 +533,8 @@ function handleModalInput() {
 
 /**
  * Show the modal.
+ * 
+ * @returns void
  */
 function showModal() {
     console.log(`Opening modal with command ${modal.getAttribute('data-command')}`);
@@ -513,6 +551,8 @@ function showModal() {
 
 /**
  * Hide the modal.
+ * 
+ * @returns void
  */
 function hideModal() {
     modal.style.display = 'none';
@@ -523,6 +563,9 @@ function hideModal() {
 
 /**
  * Show an alert message.
+ * 
+ * @param message The message to show.
+ * @returns void
  */
 function showAlert(message: string) {
     const alertContainer = document.getElementById('alert-container');
@@ -544,6 +587,9 @@ function showAlert(message: string) {
 
 /**
  * Get the current search state.
+ * 
+ * @returns The current search state.
+ * @returns void
  */
 function getSearchState() {
     return searchState;
@@ -551,6 +597,9 @@ function getSearchState() {
 
 /**
  * Set the current search state.
+ * 
+ * @param newSearchState The new search state.
+ * @returns void
  */
 function setSearchState(newSearchState: ISearchState) {
     searchState = newSearchState;
@@ -558,6 +607,10 @@ function setSearchState(newSearchState: ISearchState) {
 
 /**
  * Set the a search state prop.
+ * 
+ * @param prop The prop to set.
+ * @param value The value to set.
+ * @returns void
  */
 function setSearchStateProp<K extends keyof ISearchState>(prop: K, value: ISearchState[K]) {
     searchState[prop] = value;
@@ -565,6 +618,9 @@ function setSearchStateProp<K extends keyof ISearchState>(prop: K, value: ISearc
 
 /**
  * Set the current search term.
+ * 
+ * @param value The value to set.
+ * @returns void
  */
 function setSearchTerm(value: string) {
     setSearchStateProp('term', value);
@@ -572,6 +628,9 @@ function setSearchTerm(value: string) {
 
 /**
  * Set the current search column.
+ * 
+ * @param value The value to set.
+ * @returns void
  */
 function setSearchColumn(value: string) {
     setSearchStateProp('column', value);
@@ -579,6 +638,9 @@ function setSearchColumn(value: string) {
 
 /**
  * Set the current search state.
+ * 
+ * @param value The value to set.
+ * @returns void
  */
 function getSearchStateProp<K extends keyof ISearchState>(prop: K) {
     return searchState[prop] ?? null; 
@@ -586,6 +648,8 @@ function getSearchStateProp<K extends keyof ISearchState>(prop: K) {
 
 /**
  * Get the current search term.
+ * 
+ * @returns The current search term.
  */
 function getSearchTerm() {
     return getSearchStateProp('term');
@@ -593,6 +657,8 @@ function getSearchTerm() {
 
 /**
  * Get the current search column.
+ * 
+ * @returns The current search column.
  */
 function getSearchColumn() {
     return getSearchStateProp('column');
@@ -600,6 +666,8 @@ function getSearchColumn() {
 
 /**
  * Clear the current term being searched.
+ * 
+ * @returns void
  */
 function clearSearchState() {
     searchState = {
@@ -611,6 +679,8 @@ function clearSearchState() {
 
 /**
  * Check if a search is happening right now.
+ * 
+ * @returns Whether a search is active.
  */
 function isSearchActive() {
     return (searchState.mode && searchState.term) ? true : false;
@@ -618,6 +688,8 @@ function isSearchActive() {
 
 /**
  * Repeat the last search performed.
+ * 
+ * @returns void
  */
 function repeatSearch() {
     const { term, column, mode } = getSearchState();
@@ -655,6 +727,9 @@ function repeatSearch() {
 
 /**
  * Jump to a specific record.
+ * 
+ * @param recordNumber The record number to jump to.
+ * @returns void
  */
 function jumpToRecord(recordNumber: number) {
     if (!isNaN(recordNumber) && recordNumber > 0 && recordNumber <= records.length) {
@@ -667,6 +742,8 @@ function jumpToRecord(recordNumber: number) {
 
 /**
  * Display the next record.
+ * 
+ * @returns void
  */
 function nextRecord() {
     if (currentIndex < getMaxRecords()) {
@@ -689,6 +766,8 @@ function previousRecord() {
 
 /**
  * Page up.
+ * 
+ * @returns void
  */
 function previousPage() {
     if (currentIndex >= recordsPerPage) {
@@ -703,6 +782,8 @@ function previousPage() {
 
 /**
  * Page down.
+ * 
+ * @returns void
  */
 function nextPage() {
     let maxRecords = getMaxRecords();
@@ -718,6 +799,8 @@ function nextPage() {
 
 /**
  * Show first page.
+ * 
+ * @returns void
  */
 function firstPage() {
     currentIndex = 0;
@@ -726,6 +809,8 @@ function firstPage() {
 
 /**
  * Show last page.
+ * 
+ * @returns void
  */
 function lastPage() {
     currentIndex = getMaxRecords();
@@ -734,6 +819,9 @@ function lastPage() {
 
 /**
  * Disable a button by ID.
+ * 
+ * @param buttonId The ID of the button to disable.
+ * @returns void
  */
 function disableButton(buttonId: string) {
     const button = document.getElementById(buttonId);
@@ -744,6 +832,9 @@ function disableButton(buttonId: string) {
 
 /**
  * Enable a button by ID.
+ * 
+ * @param buttonId The ID of the button to enable.
+ * @returns void
  */
 function enableButton(buttonId: string) {
     const button = document.getElementById(buttonId);
@@ -754,6 +845,10 @@ function enableButton(buttonId: string) {
 
 /**
  * Set whether a button is enabled or not.
+ * 
+ * @param buttonId The ID of the button to enable/disable.
+ * @param enabled Whether the button should be enabled or not.
+ * @returns void
  */
 function setButtonEnabled(buttonId: string, enabled: boolean) {
     if (enabled) {
@@ -765,6 +860,10 @@ function setButtonEnabled(buttonId: string, enabled: boolean) {
 
 /**
  * Set a number of buttons to be enabled or disabled at once.
+ * 
+ * @param buttonIds The IDs of the buttons to enable/disable.
+ * @param enabled Whether the buttons should be enabled or not.
+ * @returns void
  */
 function setButtonsEnabled(buttonIds: string[], enabled: boolean) {
     buttonIds.forEach((buttonId) => {        
@@ -772,6 +871,12 @@ function setButtonsEnabled(buttonIds: string[], enabled: boolean) {
     }, enabled)
 }
 
+/**
+ * Set whether the navigation buttons are enabled or not.
+ * 
+ * @param enabled Whether the buttons should be enabled or not.
+ * @returns void
+ */
 function setNavButtonsEnabled(enabled: boolean) {
     const buttons = document.querySelectorAll('button.navigation-button');
     buttons.forEach((button) => {
@@ -783,6 +888,8 @@ function setNavButtonsEnabled(enabled: boolean) {
 
 /**
  * Update state of buttons (enabled/disabled) based on state of app.
+ * 
+ * @returns void
  */
 function updateButtonState() {
     if (getMaxRecords() === 0) {
@@ -797,13 +904,18 @@ function updateButtonState() {
 
 /**
  * Retrieve current records.
+ * 
+ * @returns The current records.
  */
 function getRecords() {
     return records;
 }
 
 /**
- * Retrieve current records.
+ * Retrieve a specific record.
+ * 
+ * @param index The index of the record to retrieve.
+ * @returns The current records.
  */
 function getRecord(index: number): any {
     const records = getRecords();
@@ -815,6 +927,9 @@ function getRecord(index: number): any {
 
 /**
  * Update current records.
+ * 
+ * @param newRecords The new records.
+ * @returns void
  */
 function setRecords(newRecords: any) {
     records = newRecords;
@@ -822,6 +937,9 @@ function setRecords(newRecords: any) {
 
 /**
  * Get the total records (0-based)
+ * 
+ * @returns The total records.
+ * @returns void
  */
 function getMaxRecords() {
     let records = getRecords();
@@ -830,6 +948,9 @@ function getMaxRecords() {
 
 /**
  * Prettify and format the HTML.
+ * 
+ * @param htmlString The HTML to format.
+ * @returns The formatted HTML.
  */
 function prettyHTML(htmlString: string): string {
     return hljs.highlight(
@@ -844,6 +965,15 @@ function prettyHTML(htmlString: string): string {
     ).value;
 }
 
+/**
+ * Highlight a search term in a string.
+ * 
+ * @param field The name of the field that's being highlighted.
+ * @param content The content to search.
+ * @param searchTerm The search term.
+ * @param searchColumn The column being searched. If specified, the term will only be highlighted if searchColumn == field.
+ * @returns The highlighted content.
+ */
 function highlightSearchTerm(field: string, content: string, searchTerm: string, searchColumn: string): string {
     if (!content || !searchTerm) {
         return content;
@@ -859,7 +989,10 @@ function highlightSearchTerm(field: string, content: string, searchTerm: string,
 }
 
 /**
- * Returns markup needed to highlight text.
+ * Returns markup needed to highlight text in prompts and dialogs.
+ * 
+ * @param text The text to highlight.
+ * @returns The highlighted text.
  */
 function highlight(text: string): string {
     return `<span class="highlight">${text}</span>`;
