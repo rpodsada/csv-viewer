@@ -39,30 +39,6 @@ let modalOpen: boolean = false;
 showScreen('default');
 
 /**
- * Show a particular screen for the app.
- * - default: The default screen with instructions.
- * - record: The screen with the record data.
- * 
- * @param screen The screen to show.
- * @returns void
- */
-function showScreen(screen: string) {
-    if (!defaultContent || !recordWindow) {
-        return;
-    }
-    switch (screen) {
-        case 'default':
-            defaultContent.style.display = 'flex';
-            recordWindow.style.display = 'none';
-            break;
-        case 'record':
-            defaultContent.style.display = 'none';
-            recordWindow.style.display = 'block';
-            break;
-    }
-}
-
-/**
  * Listen for changes to the file data and update the display.
  */
 ipcRenderer.on('file-data', (event: any, data: any) => {
@@ -900,6 +876,30 @@ function updateButtonState() {
     setButtonsEnabled(['btn-next', 'btn-next-page', 'btn-last'], currentIndex < getMaxRecords());
     setButtonsEnabled(['btn-jump', 'btn-find'], getMaxRecords() > 0);
     setButtonEnabled('btn-find-again', isSearchActive());
+}
+
+/**
+ * Show a particular screen for the app.
+ * - default: The default screen with instructions.
+ * - record: The screen with the record data.
+ * 
+ * @param screen The screen to show.
+ * @returns void
+ */
+function showScreen(screen: string) {
+    if (!defaultContent || !recordWindow) {
+        return;
+    }
+    switch (screen) {
+        case 'default':
+            defaultContent.style.display = 'flex';
+            recordWindow.style.display = 'none';
+            break;
+        case 'record':
+            defaultContent.style.display = 'none';
+            recordWindow.style.display = 'block';
+            break;
+    }
 }
 
 /**
