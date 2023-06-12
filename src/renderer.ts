@@ -100,6 +100,7 @@ appWindow?.addEventListener('drop', (event: DragEvent) => {
             ipcRenderer.send('file-dropped', file.path); 
         }
     }
+    appWindow?.classList.remove('dragover');
 });
 
 /**
@@ -297,7 +298,7 @@ function displayRecord(index: number) {
             innerTable += `
                 <tr>
                     <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                    <td>
+                    <td class="data-column" data-column-name="${key}">
                         <div class="collapsible-cell ${isCollapsed ? 'collapsed' : ''}">
                             <button class="collapse-expand-btn">${isCollapsed ? arrowDown : arrowUp}</button>
                             <div class="collapsible-content" ${isCollapsed ? ' style="height: 1.2em; overflow: hidden;"' : ''}>
@@ -310,14 +311,14 @@ function displayRecord(index: number) {
             innerTable += `
                 <tr>
                     <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                    <td>${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}</td>
+                    <td class="data-column" data-column-name="${key}">${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}</td>
                 </tr>`;
         }
     }
     innerTable += `</table>`;
     recordWindow.innerHTML += innerTable;
 
-    // Activate click on CSV columns
+    // Activate click on CSV header columns.
     const csvColumns = document.querySelectorAll('th.csv-column');
     csvColumns.forEach((element) => {
         element.addEventListener('click', (event) => {
@@ -331,6 +332,26 @@ function displayRecord(index: number) {
             doCommand('find-column', {
                 column: csvColumn,
             });
+        });
+    });
+
+    // Activate click on CSV data columns.
+    const dataColumns = document.querySelectorAll('td.data-column');
+    dataColumns.forEach((element) => {
+        element.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Get the name of the field from the data-column-name attribute.
+            const cell = (event.target as Element)?.closest('td');
+            const fieldName = cell?.getAttribute('data-column-name');
+            if (!fieldName) {
+                return;
+            }
+            const cellContent = record[fieldName];
+            if (!cellContent) {
+                return;
+            }
+            require('electron').clipboard.writeText(cellContent);
+            showAlert('Value copied to clipboard.');
         });
     });
 

@@ -177,6 +177,10 @@ input.active.focus {
     background: #444;
 }
 
+#record-display td:hover {
+    background: #222;
+}
+
 code,
 pre {
     font-family: Consolas, monospace;
