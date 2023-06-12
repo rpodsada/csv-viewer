@@ -240,8 +240,9 @@ button.disabled {
     padding: 5px 8px 2px 8px;
     background: transparent;
     font-size: 20px;
-    color:#abb2bf;
+    color: #abb2bf;
 }
+
 #modal-close-btn:hover {
     color: #fff;
 }
