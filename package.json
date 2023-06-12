@@ -52,13 +52,13 @@
                 {
                     "x": 130,
                     "y": 220,
-                    "type": "link",
-                    "path": "/Applications"
+                    "type": "file"
                 },
                 {
                     "x": 410,
                     "y": 220,
-                    "type": "file"
+                    "type": "link",
+                    "path": "/Applications"
                 }
             ]
         },
