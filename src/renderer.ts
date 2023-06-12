@@ -4,25 +4,30 @@ const hljs = require('highlight.js');
 const html = require('html');
 require("@fortawesome/fontawesome-free/js/all");
 
+// Types
+interface ISearchState {
+    mode: '' | 'find' | 'find-column',
+    term: string,
+    column: string,
+}
+
 // State
-let records = [];
-let currentIndex = 0;
-let recordsPerPage = 10;
-let lastSearchTerm = '';
-let lastSearchMode = null;
-let lastSearchColumn = null;
-let collapsedState = {};
-let searchState = {
-    term: null,
-    column: null,
+let records: { [key: string]: boolean }[] = [];
+let currentIndex: number = 0;
+let recordsPerPage: number = 10;
+let collapsedState: { [key: string]: boolean } = {};
+let searchState: ISearchState = {
+    term: '',
+    column: '',
+    mode: '',
 };
 
 // Modal
-let modal = document.getElementById('input-modal');
-let modalInput = document.getElementById('modal-input');
-let modalHeading = document.getElementById('modal-header');
-let modalInstructions = document.getElementById('modal-instructions');
-let modalOpen = false;
+let modal = document.getElementById('input-modal') as HTMLElement;
+let modalInput = document.getElementById('modal-input') as HTMLInputElement;
+let modalHeading = document.getElementById('modal-header') as HTMLElement;
+let modalInstructions = document.getElementById('modal-instructions') as HTMLElement;
+let modalOpen: boolean = false;
 
 // Open file dialog to choose a CSV file on startup
 ipcRenderer.send('open-csv');
@@ -30,7 +35,7 @@ ipcRenderer.send('open-csv');
 /**
  * Listen for changes to the file data and update the display.
  */
-ipcRenderer.on('file-data', (event, data) => {
+ipcRenderer.on('file-data', (event: any, data: any) => {
     console.log(`File data changed, loading ${data.length} records...`);
     showAlert(`${highlight(data.length)} records loaded.`);
     currentIndex = 0;
@@ -52,7 +57,6 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.key === 'Escape' && isSearchActive()) {
         console.log(`Cancelling search.`);
-        forgetSearch();
         clearSearchState();
         displayRecord(currentIndex);
         showAlert(`Search cancelled.`);
@@ -115,8 +119,8 @@ document.addEventListener('keydown', (event) => {
  * Navigation buttons clicked.
  */
 document.querySelectorAll('button.navigation-button').forEach((element) => {
-    element.addEventListener('click', (event) => {
-        const navAction = event.target.closest('button').getAttribute('data-nav-action');
+    element.addEventListener('click', (event: Event) => {
+        const navAction = (event.target as Element).closest('button')?.getAttribute('data-nav-action');
         if (!navAction) {
             return;
         }
@@ -164,14 +168,21 @@ document.querySelectorAll('button.navigation-button').forEach((element) => {
 /**
  * Hit Go button on modal
  */
-document.getElementById('modal-ok-btn').addEventListener('click', () => {
+document.getElementById('modal-ok-btn')?.addEventListener('click', () => {
     handleModalInput();
+});
+
+/**
+ * Close button on modal
+ */
+document.getElementById('modal-close-btn')?.addEventListener('click', () => {
+    hideModal();
 });
 
 /**
  * Hit enter on modal input field.
  */
-document.getElementById('modal-input').addEventListener('keydown', (event) => {
+document.getElementById('modal-input')?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         handleModalInput();
     }
@@ -180,98 +191,106 @@ document.getElementById('modal-input').addEventListener('keydown', (event) => {
 /**
  * Display a record.
  */
-function displayRecord(index) {
+function displayRecord(index: number): void {
+    // Get the chosen record.
+    const record = getRecord(index);
+    if (!record) {
+        return;
+    }
+
     const arrowUp = `Collapse <i class="fa fa-caret-up"></i>`;
     const arrowDown = `Expand <i class="fa fa-caret-down"></i>`;
-    const record = getRecord(index);
     const htmlTagRegex = /<([a-z][a-z0-9]*)\b[^>]*>/i;
-    if (record) {
-        updateButtonState();
 
-        const container = document.getElementById('record-container');
-        container.innerHTML = `<div id="record-number">${index + 1}</div>`;
+    updateButtonState();
 
-        let innerTable = `<table id="record-display">`;
-        for (const key in record) {
-            let cellContent = record[key];
-            if (typeof cellContent === 'string' && htmlTagRegex.test(cellContent)) {
-                const isCollapsed = collapsedState[key] === true;
-                innerTable += `
-                    <tr>
-                        <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                        <td>
-                            <div class="collapsible-cell ${isCollapsed ? 'collapsed' : ''}">
-                                <button class="collapse-expand-btn">${isCollapsed ? arrowDown : arrowUp}</button>
-                                <div class="collapsible-content" ${isCollapsed ? ' style="height: 1.2em; overflow: hidden;"' : ''}>
-                                    <pre><code>${highlightSearchTerm(key, prettyHTML(cellContent), getSearchTerm(), getSearchColumn())}</code></pre>
-                                </div>
+    const container = document.getElementById('record-container');
+    if (!container) {
+        return;
+    }
+
+    // Display current row number.
+    container.innerHTML = `<div id="record-number">${index + 1}</div>`;
+
+    // Display the CSV data.
+    let innerTable = `<table id="record-display">`;
+    for (const key in record) {
+        let cellContent = record[key];
+        if (typeof cellContent === 'string' && htmlTagRegex.test(cellContent)) {
+            const isCollapsed = collapsedState[key] === true;
+            innerTable += `
+                <tr>
+                    <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
+                    <td>
+                        <div class="collapsible-cell ${isCollapsed ? 'collapsed' : ''}">
+                            <button class="collapse-expand-btn">${isCollapsed ? arrowDown : arrowUp}</button>
+                            <div class="collapsible-content" ${isCollapsed ? ' style="height: 1.2em; overflow: hidden;"' : ''}>
+                                <pre><code>${highlightSearchTerm(key, prettyHTML(cellContent), getSearchTerm(), getSearchColumn())}</code></pre>
                             </div>
-                        </td>
-                    </tr>`;
-            } else {
-                innerTable += `
-                    <tr>
-                        <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                        <td>${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}</td>
-                    </tr>`;
-            }
+                        </div>
+                    </td>
+                </tr>`;
+        } else {
+            innerTable += `
+                <tr>
+                    <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
+                    <td>${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}</td>
+                </tr>`;
         }
-        innerTable += `</table>`;
+    }
+    innerTable += `</table>`;
+    container.innerHTML += innerTable;
 
-        container.innerHTML += innerTable;
-
-        // Activate click on CSV columns
-        const csvColumns = document.querySelectorAll('th.csv-column');
-        csvColumns.forEach((element) => {
-            element.addEventListener('click', (event) => {
-                event.preventDefault();
-                const column = event.target;
-                const csvColumn = column.getAttribute('data-column-name');
-                if (!csvColumn) {
-                    return;
-                }
-                event.preventDefault();
-                doCommand('find-column', {
-                    column: csvColumn,
-                });
+    // Activate click on CSV columns
+    const csvColumns = document.querySelectorAll('th.csv-column');
+    csvColumns.forEach((element) => {
+        element.addEventListener('click', (event) => {
+            event.preventDefault();
+            const column = event.target as Element;
+            const csvColumn = column.getAttribute('data-column-name');
+            if (!csvColumn) {
+                return;
+            }
+            event.preventDefault();
+            doCommand('find-column', {
+                column: csvColumn,
             });
         });
+    });
 
-        // Add event listener to the parent table element using event delegation
-        document.querySelector('#record-display').addEventListener('click', (event) => {
-            const button = event.target.closest('.collapse-expand-btn');
-            if (button) {
-                const collapsibleCell = button.parentElement;
-                const row = button.closest('tr');
-                const key = row.querySelector('th').getAttribute('data-column-name');
-                const collapsibleContent = row.querySelector('.collapsible-content');
-                const isCollapsed = collapsibleCell.classList.contains('collapsed');
+    // Add event listener to the parent table element using event delegation
+    document.querySelector('#record-display')?.addEventListener('click', (event) => {
+        const button = (event.target as Element)?.closest('.collapse-expand-btn');
+        const row = button?.closest('tr');
+        const [key, collapsibleContent, collapsibleCell] = [
+            row?.querySelector('th')?.getAttribute('data-column-name'),
+            row?.querySelector('.collapsible-content') as HTMLElement,
+            button?.parentElement
+        ];
+        if (!button || !row || !key || !collapsibleContent || !collapsibleCell) {
+            return;
+        }
+        
+        const isCollapsed = collapsibleCell.classList.contains('collapsed');
 
-                collapsibleCell.classList.toggle('collapsed');
-                if (isCollapsed) {
-                    button.innerHTML = arrowUp;
-                    collapsibleContent.style.height = 'auto';
-                    collapsibleContent.style.overflow = 'visible';
-                    collapsedState[key] = false;
-                } else {
-                    button.innerHTML = arrowDown;
-                    collapsibleContent.style.height = '1.2em';
-                    collapsibleContent.style.overflow = 'hidden';
-                    collapsedState[key] = true;
-                }
-            }
-        });
-
-    }
+        collapsibleCell.classList.toggle('collapsed');
+        button.innerHTML = isCollapsed ? arrowUp : arrowDown;
+        collapsibleContent.style.height = isCollapsed ? 'auto' : '1.2em';
+        collapsibleContent.style.overflow = isCollapsed ? 'visible' : 'hidden';
+        collapsedState[key] = !isCollapsed;
+    });
 }
 
 /**
  * Execute a command
  */
-function doCommand(command, args) {
+function doCommand(command: string, args: { [key:string]: any } = {}): void {
+    if (!modal || !modalInput || !modalHeading || !modalInstructions) {
+        return;
+    }
     switch (command) {
         case "find":
-            modalInput.type = 'text';
+            modalInput.setAttribute('type', 'text');
             modalHeading.textContent = `Find Records with Text`;
             modalInstructions.textContent = `Displays the first record which contains the text in any field.`;
             break;
@@ -281,7 +300,7 @@ function doCommand(command, args) {
                 return;
             }
             modal.setAttribute('data-column', args.column);
-            modalInput.type = 'text';
+            modalInput.setAttribute('type', 'text');
             modalHeading.innerHTML = `Search ${highlight(args.column)} for Text`;
             modalInstructions.innerHTML = `Displays the first record containing the text in the column.`;
             break;
@@ -289,9 +308,9 @@ function doCommand(command, args) {
             repeatSearch();
             return;
         case "jump":
-            modalInput.type = 'number';
+            modalInput.setAttribute('type', 'number');
             modalHeading.innerHTML = `Jump to Record`;
-            modalInstructions.innerHTML = `Enter a record number to jump to between ${highlight('1')} and ${highlight(records.length - 1)}.`;
+            modalInstructions.innerHTML = `Enter a record number to jump to between ${highlight('1')} and ${highlight(getMaxRecords().toString())}.`;
             break;
         default:
             return;
@@ -303,17 +322,19 @@ function doCommand(command, args) {
 /**
  * Search the data for some text.
  */
-function searchData(searchText, searchColumn, startRecord) {
+function searchData(searchText: string, searchColumn: string = '', startRecord: number = 0) {
     const matchingIndex = findRecordIndex(searchText, searchColumn, startRecord);
     if (matchingIndex !== -1) {
         currentIndex = matchingIndex;
         setSearchState({
             term: searchText,
-            column: searchColumn
+            column: searchColumn,
+            mode: searchColumn ? 'find-column' : 'find',
         });
         displayRecord(currentIndex);
         return true;
     }
+    clearSearchState();
     displayRecord(currentIndex);
     return false;
 }
@@ -321,7 +342,7 @@ function searchData(searchText, searchColumn, startRecord) {
 /**
  * Get the index of a record which contains searchText in any of the fields.
  */
-function findRecordIndex(searchText, searchColumn, startRecord) {
+function findRecordIndex(searchText: string, searchColumn: string, startRecord: number) {
     let firstRecord = 0;
     if (startRecord) {
         const maxRecords = getMaxRecords();
@@ -353,8 +374,11 @@ function findRecordIndex(searchText, searchColumn, startRecord) {
  * Handle the modal input.
  */
 function handleModalInput() {
+    if (!modal || !modalInput) {
+        return;
+    }
     // Get the value from the modal.
-    const inputValue = document.getElementById('modal-input').value;
+    const inputValue = modalInput?.value;
     if (!inputValue) {
         console.log("No value entered");
         hideModal();
@@ -372,9 +396,7 @@ function handleModalInput() {
     if (modalCommand === 'find') {
         console.log(`Process find command for ${inputValue} in any column`);
         hideModal();
-        rememberSearch('find', inputValue, null);
         if (!searchData(inputValue)) {
-            forgetSearch();
             showAlert(`${highlight(inputValue)} not found in document`);
             return;
         }
@@ -386,10 +408,7 @@ function handleModalInput() {
         if (!csvColumn) {
             return;
         }
-        rememberSearch('find-column', inputValue, csvColumn);
         if (!searchData(inputValue, csvColumn)) {
-            forgetSearch();
-            clearSearchState();
             showAlert(`No records found with ${highlight(inputValue)} in ${highlight(csvColumn)}`);
             return;
         }
@@ -426,14 +445,18 @@ function hideModal() {
 /**
  * Show an alert message.
  */
-function showAlert(message) {
+function showAlert(message: string) {
     const alertContainer = document.getElementById('alert-container');
+    if (!alertContainer) {
+        return;
+    }
     alertContainer.innerHTML = message;
     alertContainer.classList.remove('hide');
     alertContainer.classList.add('show');
-    alertContainer.addEventListener('click', (event) => { 
-        event.target.classList.add('hide');
-        event.target.classList.remove('show');
+    alertContainer.addEventListener('click', (event) => {
+        const alertBox = event.target as Element;
+        alertBox?.classList.add('hide');
+        alertBox?.classList.remove('show');
     });
     setTimeout(() => {
         alertContainer.classList.remove('show');
@@ -450,35 +473,35 @@ function getSearchState() {
 /**
  * Set the current search state.
  */
-function setSearchState(newSearchState) {
+function setSearchState(newSearchState: ISearchState) {
     searchState = newSearchState;
 }
 
 /**
  * Set the a search state prop.
  */
-function setSearchStateProp(prop, value) {
-    searchStatep[prop] = value;
+function setSearchStateProp<K extends keyof ISearchState>(prop: K, value: ISearchState[K]) {
+    searchState[prop] = value;
 }
 
 /**
  * Set the current search term.
  */
-function setSearchTerm(value) {
+function setSearchTerm(value: string) {
     setSearchStateProp('term', value);
 }
 
 /**
  * Set the current search column.
  */
-function setSearchColumn(value) {
+function setSearchColumn(value: string) {
     setSearchStateProp('column', value);
 }
 
 /**
  * Set the current search state.
  */
-function getSearchStateProp(prop) {
+function getSearchStateProp<K extends keyof ISearchState>(prop: K) {
     return searchState[prop] ?? null; 
 }
 
@@ -501,8 +524,9 @@ function getSearchColumn() {
  */
 function clearSearchState() {
     searchState = {
-        term: null,
-        column: null
+        term: '',
+        column: '',
+        mode: '',
     }
 }
 
@@ -510,79 +534,55 @@ function clearSearchState() {
  * Check if a search is happening right now.
  */
 function isSearchActive() {
-    return searchState.term ? true : false;
-}
-
-/**
- * Remember the last search performed.
- */
-function rememberSearch(searchMode, searchText, searchColumn) {
-    console.log(`rememberSearch called for mode [${searchMode}] for [${searchText}] in column [${searchColumn}]`);
-    if (!searchMode || !searchText) {
-        return;
-    }
-    lastSearchMode = searchMode;
-    lastSearchTerm = searchText;
-    lastSearchColumn = searchColumn ?? null;
-}
-
-/**
- * Forgets the last search.
- */
-function forgetSearch() {
-    console.log(`forgetSearch called.`);
-    lastSearchMode = null;
-    lastSearchTerm = null;
-    lastSearchColumn = null;
+    return (searchState.mode && searchState.term) ? true : false;
 }
 
 /**
  * Repeat the last search performed.
  */
 function repeatSearch() {
-    console.log(`repeatSearch called in mode [${lastSearchMode}] for [${lastSearchTerm}] in column [${lastSearchColumn}]`);
-    if (!lastSearchMode || !lastSearchTerm) {
+    const { term, column, mode } = getSearchState();
+
+    console.log(`Repeating [${mode}] search for text [${term}] in column [${column}]`);
+
+    // Ensure we're searching and have correct parms.
+    if (!isSearchActive()) {
         return;
     }
-    let foundResult = false;
-    let nextIndex = currentIndex + 1;
-    if (lastSearchMode === 'find') {
-        console.log(`Repeating find command for ${lastSearchTerm}`);
-        foundResult = searchData(lastSearchTerm, null, nextIndex);
-        if (!foundResult) {
-            // Check if the value exists anywhere at all
-            // If so, loop back around past 0 to the next value.
-            // Otherwise, stop searching to avoid infinite loop.
-            console.log(`No result found for ${lastSearchTerm} after index ${nextIndex}. Searching from start...`);
-            if (!searchData(lastSearchTerm)) {
-                showAlert(`No result found for ${highlight(lastSearchTerm)} in file, ending search.`);
-            }
-        }
+    if (mode === 'find-column' && !column) {
+        return;
     }
-    if (lastSearchMode === 'find-column' && lastSearchColumn) {
-        console.log(`Repeating find command for ${lastSearchTerm} in ${lastSearchColumn}`);
-        foundResult = searchData(lastSearchTerm, lastSearchColumn, currentIndex + 1);
-        if (!foundResult) {
-            // Check if the value exists anywhere at all
-            // If so, loop back around past 0 to the next value.
-            // Otherwise, stop searching to avoid infinite loop.
-            console.log(`No result found for ${lastSearchTerm} in ${lastSearchColumn} after index ${nextIndex}. Searching from start...`);
-            if (!searchData(lastSearchTerm, lastSearchColumn)) {
-                showAlert(`No result found for ${highlight(lastSearchTerm)} in ${highlight(lastSearchColumn)} in file, ending search.`)
-            }
-        }
+
+    // Run the search from our current position.
+    if (searchData(term, column, currentIndex + 1)) {
+        return;
+    }
+
+    // Try the search again after looping around to the start again.
+    if (searchData(term, column)) {
+        return true;
+    }
+
+    // The value doesn't exist.
+    switch (mode) {
+        case 'find':
+            showAlert(`No result found for ${highlight(term)} in file, ending search.`);
+            break;
+        case 'find':
+            showAlert(`No result found for ${highlight(term)} in ${highlight(column)} in file, ending search.`)
+            break;
     }
 }
 
 /**
  * Jump to a specific record.
  */
-function jumpToRecord(recordNumber) {
+function jumpToRecord(recordNumber: number) {
     if (!isNaN(recordNumber) && recordNumber > 0 && recordNumber <= records.length) {
         currentIndex = recordNumber - 1;
         displayRecord(currentIndex);
     } else {
-        showAlert(`Please enter a number between ${highlight('1')} and ${highlight(getMaxRecords()+1)}.`);
+        showAlert(`Please enter a number between ${highlight('1')} and ${highlight((getMaxRecords()+1).toString())}.`);
     }
 }
 
@@ -656,7 +656,7 @@ function lastPage() {
 /**
  * Disable a button by ID.
  */
-function disableButton(buttonId) {
+function disableButton(buttonId: string) {
     const button = document.getElementById(buttonId);
     if (button) {
         button.setAttribute('disabled', 'disabled');
@@ -666,7 +666,7 @@ function disableButton(buttonId) {
 /**
  * Enable a button by ID.
  */
-function enableButton(buttonId) {
+function enableButton(buttonId: string) {
     const button = document.getElementById(buttonId);
     if (button) {
         button.removeAttribute('disabled');
@@ -676,7 +676,7 @@ function enableButton(buttonId) {
 /**
  * Set whether a button is enabled or not.
  */
-function setButtonEnabled(buttonId, enabled) {
+function setButtonEnabled(buttonId: string, enabled: boolean) {
     if (enabled) {
         enableButton(buttonId);
     } else {
@@ -687,13 +687,13 @@ function setButtonEnabled(buttonId, enabled) {
 /**
  * Set a number of buttons to be enabled or disabled at once.
  */
-function setButtonsEnabled(buttonIds, enabled) {
+function setButtonsEnabled(buttonIds: string[], enabled: boolean) {
     buttonIds.forEach((buttonId) => {        
         setButtonEnabled(buttonId, enabled)
     }, enabled)
 }
 
-function setNavButtonsEnabled(query, enabled) {
+function setNavButtonsEnabled(enabled: boolean) {
     const buttons = document.querySelectorAll('button.navigation-button');
     buttons.forEach((button) => {
         if (button.id) {
@@ -713,7 +713,7 @@ function updateButtonState() {
     setButtonsEnabled(['btn-first', 'btn-prev-page', 'btn-prev'], currentIndex > 0);
     setButtonsEnabled(['btn-next', 'btn-next-page', 'btn-last'], currentIndex < getMaxRecords());
     setButtonsEnabled(['btn-jump', 'btn-find'], getMaxRecords() > 0);
-    setButtonEnabled('btn-find-again', lastSearchMode && lastSearchTerm)
+    setButtonEnabled('btn-find-again', isSearchActive());
 }
 
 /**
@@ -726,7 +726,7 @@ function getRecords() {
 /**
  * Retrieve current records.
  */
-function getRecord(index) {
+function getRecord(index: number): any {
     const records = getRecords();
     if (index >= 0 && index < records.length) {
         return records[index];
@@ -737,7 +737,7 @@ function getRecord(index) {
 /**
  * Update current records.
  */
-function setRecords(newRecords) {
+function setRecords(newRecords: any) {
     records = newRecords;
 }
 
@@ -752,7 +752,7 @@ function getMaxRecords() {
 /**
  * Prettify and format the HTML.
  */
-function prettyHTML(htmlString) {
+function prettyHTML(htmlString: string): string {
     return hljs.highlight(
         html.prettyPrint(
             htmlString,
@@ -765,7 +765,7 @@ function prettyHTML(htmlString) {
     ).value;
 }
 
-function highlightSearchTerm(field, content, searchTerm, searchColumn) {
+function highlightSearchTerm(field: string, content: string, searchTerm: string, searchColumn: string): string {
     if (!content || !searchTerm) {
         return content;
     }
@@ -782,6 +782,6 @@ function highlightSearchTerm(field, content, searchTerm, searchColumn) {
 /**
  * Returns markup needed to highlight text.
  */
-function highlight(text) {
+function highlight(text: string): string {
     return `<span class="highlight">${text}</span>`;
 }

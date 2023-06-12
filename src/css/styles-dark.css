@@ -42,9 +42,19 @@ html {
 }
 
 mark {
-    background:#caa621;
-    color:#000;
+    background: #caa621;
+    color: #000;
 }
+
+input:focus,
+input:active:focus,
+input.active:focus,
+input.focus,
+input:active.focus,
+input.active.focus {
+    outline: 2px solid #61afef !important;
+}
+
 .highlight {
     color: #61afef;
 }
@@ -177,8 +187,8 @@ button {
     border: 0;
     font-weight: normal;
     font-size: 14px;
+    user-select: none;
 }
-
 
 button:hover {
     background: #667288;
@@ -221,6 +231,19 @@ button.disabled {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+#modal-close-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 5px 8px 2px 8px;
+    background: transparent;
+    font-size: 20px;
+    color:#abb2bf;
+}
+#modal-close-btn:hover {
+    color: #fff;
+}
+
 #modal-header {
     font-weight: bold;
     font-size: 20px;
@@ -245,14 +268,6 @@ button.disabled {
     border-radius: 5px;
 }
 
-input:focus,
-input:active:focus,
-input.active:focus,
-input.focus,
-input:active.focus,
-input.active.focus {
-    outline: 2px solid #61afef !important;
-}
 
 #modal-input[type="number"] {
     width: 100px;

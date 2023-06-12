@@ -1,19 +1,21 @@
 {
     "name": "csv-viewer",
     "productName": "CSV Viewer",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "homepage": "https://www.github.com/rpodsada/csv-viewer#readme",
     "description": "A simple form-style viewer to inspect records in a CSV file.",
     "author": "Richard Podsada <rpodsada@gmail.com> (https://www.github.com/rpodsada)",
     "license": "MIT",
     "copyright": "Copyright (c) 2023 ${author}",
-    "main": "src/main.js",
+    "main": "build/main.js",
     "scripts": {
-        "start": "electron .",
-        "build": "electron-builder",
-        "build:windows": "electron-builder --windows",
-        "build:mac": "electron-builder --mac",
-        "build:linux": "electron-builder --linux"
+        "start": "npm run prepare-assets && tsc --watch & npm run start:electron",
+        "start:electron": "electron ./build/main.js",
+        "build": "tsc && npm run prepare-assets && electron-builder",
+        "build:windows": "tsc && npm run prepare-assets && electron-builder --windows",
+        "build:mac": "tsc && npm run prepare-assets && electron-builder --mac",
+        "build:linux": "tsc && npm run prepare-assets && electron-builder --linux",
+        "prepare-assets": "sh prepare-assets.sh"
     },
     "build": {
         "appId": "com.richardpodsada.csv-viewer",
@@ -61,14 +63,14 @@
             ]
         },
         "files": [
-            "src/**/*",
-            "node_modules/**/*",
-            "fonts/**/*",
-            "package.json"
+            "./build/**/*",
+            "./node_modules/**/*",
+            "./package.json"
         ]
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.4.0",
+        "electron-reload": "^2.0.0-alpha.1",
         "highlight.js": "^11.8.0",
         "html": "^1.0.0",
         "papaparse": "^5.4.1",
@@ -76,7 +78,10 @@
         "save-dev": "^0.0.1-security"
     },
     "devDependencies": {
+        "@types/electron": "^1.6.10",
+        "@types/node": "^20.3.0",
         "electron": "^25.1.0",
-        "electron-builder": "^24.4.0"
+        "electron-builder": "^24.4.0",
+        "typescript": "^5.1.3"
     }
 }

@@ -1,17 +1,29 @@
+import { EventEmitter } from "stream";
+
 // main.js
 const { app, dialog, Menu, BrowserWindow, nativeTheme, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Papa = require('papaparse');
 
+// Reload app on changes.
+// require('electron-reload')(__dirname, {
+//     electron: require(path.join(__dirname, '..', 'node_modules', 'electron')),
+//     hardResetMethod: 'exit'
+// });
+
+require('electron-reload')(__dirname, {
+    hardResetMethod: 'exit'
+});
+
 // Used to set window title.
 const appTitle = 'CSV Viewer';
 
-let mainWindow;
-let fileDialogOpen = false;
+let mainWindow: any;
+let fileDialogOpen: boolean = false;
 
 // Prevent errors on Windows X-Server
-//app.disableHardwareAcceleration();
+app.disableHardwareAcceleration();
 
 // Create the application window.
 function createWindow() {
@@ -27,7 +39,7 @@ function createWindow() {
             contextIsolation: false,
         }
     });
-    mainWindow.loadFile('src/index.html');
+    mainWindow.loadFile('index.html');
 
     // Register the global shortcut for Ctrl+0 (reset zoom)
     globalShortcut.register('CommandOrControl+0', () => {
@@ -111,7 +123,7 @@ app.on('activate', () => {
 });
 
 // Open file dialog and handle selected file
-ipcMain.on('open-csv', async (event) => {
+ipcMain.on('open-csv', async () => {
     console.log("main: received open-csv ipc event");
     await openFile();
 });
@@ -147,9 +159,9 @@ const openFile = async () => {
 
 // Watches the file at filePath for changes, 
 // and triggers sending new data if it changed.
-function watchFile(filePath) {
+function watchFile(filePath: string): void {
     console.log(`Setting watch on ${filePath}.`);
-    fs.watch(filePath, (eventType) => {
+    fs.watch(filePath, (eventType: string) => {
         console.log(`watch [${filePath}]: ${eventType} fired.`);
         if (eventType === 'change') {
             console.log(`File at ${filePath} modified, reloading data`);
@@ -160,7 +172,7 @@ function watchFile(filePath) {
     });
 }
 
-function setWindowTitle(newTitle) {
+function setWindowTitle(newTitle: string): void {
     if (!newTitle) {
         mainWindow.setTitle(appTitle);
         return;
