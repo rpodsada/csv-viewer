@@ -9,22 +9,35 @@
 </head>
 
 <body>
-    <div id="record-container">
-        <!-- The data will be injected here by renderer.js -->
-    </div>
-    <div class="navigation-buttons">
-        <div class="button-set button-set-left">
-            <button disabled="disabled" id="btn-first" class="navigation-button" data-nav-action="first" title="First Record (Home)"><i class="fas fa-fast-backward"></i></button>
-            <button disabled="disabled" id="btn-prev-page" class="navigation-button" data-nav-action="prev-page" title="Back 10 Records (PageUp)"><i class="fas fa-backward"></i></button>
-            <button disabled="disabled" id="btn-prev" class="navigation-button" data-nav-action="prev" title="Previous Record (Left)"><i class="fas fa-step-backward"></i></button>
-            <button disabled="disabled" id="btn-next" class="navigation-button" data-nav-action="next" title="Next Record (Right)"><i class="fas fa-step-forward"></i></button>
-            <button disabled="disabled" id="btn-next-page" class="navigation-button" data-nav-action="next-page" title="Forward 10 Records (PageDn)"><i class="fas fa-forward"></i></button>
-            <button disabled="disabled" id="btn-last" class="navigation-button" data-nav-action="last" title="Last Record (End)"><i class="fas fa-fast-forward"></i></button>
+    <!-- Display Area -->
+    <div id="app-window">
+        
+        <!-- App Content -->
+        <div id="app-content">
+            <div id="record-container"></div>
+            <div id="default-content-container">
+                <div id="default-content">
+                    <p>Drag and drop a CSV file onto this window, or click the button below to open a file dialog.</p>
+                    <button id="open-file-btn">Open File</button>
+                </div>
+            </div>
         </div>
-        <div class="button-set button-set-right">
-            <button disabled="disabled" id="btn-jump" class="navigation-button" data-nav-action="jump" title="Jump to a Record (J)">Jump</button>
-            <button disabled="disabled" id="btn-find" class="navigation-button" data-nav-action="find" title="Find Records Containing Text (F, Ctrl/Cmd+F)">Find</button>
-            <button disabled="disabled" id="btn-find-again" class="navigation-button" data-nav-action="find-again" title="Repeat Last Search (F3, Cmd+G)">Find Again</button>
+        
+        <!-- Toolbar -->
+        <div id="app-toolbar">
+            <div class="button-set button-set-left">
+                <button disabled="disabled" id="btn-first" class="navigation-button" data-nav-action="first" title="First Record (Home)"><i class="fas fa-fast-backward"></i></button>
+                <button disabled="disabled" id="btn-prev-page" class="navigation-button" data-nav-action="prev-page" title="Back 10 Records (PageUp)"><i class="fas fa-backward"></i></button>
+                <button disabled="disabled" id="btn-prev" class="navigation-button" data-nav-action="prev" title="Previous Record (Left)"><i class="fas fa-step-backward"></i></button>
+                <button disabled="disabled" id="btn-next" class="navigation-button" data-nav-action="next" title="Next Record (Right)"><i class="fas fa-step-forward"></i></button>
+                <button disabled="disabled" id="btn-next-page" class="navigation-button" data-nav-action="next-page" title="Forward 10 Records (PageDn)"><i class="fas fa-forward"></i></button>
+                <button disabled="disabled" id="btn-last" class="navigation-button" data-nav-action="last" title="Last Record (End)"><i class="fas fa-fast-forward"></i></button>
+            </div>
+            <div class="button-set button-set-right">
+                <button disabled="disabled" id="btn-jump" class="navigation-button" data-nav-action="jump" title="Jump to a Record (J)">Jump</button>
+                <button disabled="disabled" id="btn-find" class="navigation-button" data-nav-action="find" title="Find Records Containing Text (F, Ctrl/Cmd+F)">Find</button>
+                <button disabled="disabled" id="btn-find-again" class="navigation-button" data-nav-action="find-again" title="Repeat Last Search (F3, Cmd+G)">Find Again</button>
+            </div>
         </div>
     </div>
 
@@ -42,6 +55,7 @@
     <!-- Alert Message -->
     <div id="alert-container"></div>
 
+    <!-- Main Script -->
     <script src="renderer.js"></script>
 </body>
 

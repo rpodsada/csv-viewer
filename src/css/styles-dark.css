@@ -41,6 +41,10 @@ html {
     color: #abb2bf;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 mark {
     background: #caa621;
     color: #000;
@@ -59,15 +63,72 @@ input.active.focus {
     color: #61afef;
 }
 
+/*************************************************
+ * App Window
+ *************************************************/
+
+#app-window {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#app-window.dragover {
+    background: #2c323d;
+}
+
+#app-content {
+    width: 100%;
+    height: calc(100% - 47px);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 #record-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     padding: 20px;
     overflow-y: auto;
-    height: calc(100% - 90px);
+    width: 100%;
+    height: 100%;
+}
+
+#default-content-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#default-content {
+    text-align: center;
+    background: #222;
+    width: 50%;
+    border-radius: 5px;
+    padding: 30px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 3px dashed #4e4e4e;
+}
+
+#app-toolbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /*************************************************
- * Record Number
+ * Record Display
  *************************************************/
+
+/* #region Record Display */
 
 #record-number {
     display: inline-block;
@@ -81,10 +142,6 @@ input.active.focus {
     top: 10px;
     right: 25px;
 }
-
-/*************************************************
- * Record Display Table
- *************************************************/
 
 #record-display {
     display: table;
@@ -142,15 +199,15 @@ button.collapse-expand-btn {
     padding: 3px 6px;
 }
 
+/* #endregion */
+
 /*************************************************
- * Navigation Buttons
+ * Toolbar
  *************************************************/
 
-.navigation-buttons {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+/* #region Toolbar */
+
+#app-toolbar {
     padding: 10px;
     background: #111;
     display: flex;
@@ -206,9 +263,13 @@ button.disabled {
     color: #666;
 }
 
+/* #endregion */
+
 /*************************************************
  * Modal
  *************************************************/
+
+/* #region Modal */
 
 .modal {
     display: none;
@@ -280,9 +341,13 @@ button.disabled {
     padding: 8px 16px;
 }
 
+/* #endregion */
+
 /*************************************************
  * Alerts
  *************************************************/
+
+/* #region Alerts */
 
 #alert-container {
     position: absolute;
@@ -314,3 +379,5 @@ button.disabled {
     color: #000;
     font-weight: bold;
 }
+
+/* #endregion */

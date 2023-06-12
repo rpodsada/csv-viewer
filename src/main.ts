@@ -28,7 +28,7 @@ app.disableHardwareAcceleration();
 // Create the application window.
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 850,
+        width: 1000,
         height: 600,
         minWidth: 850,
         minHeight: 250,
@@ -65,7 +65,7 @@ function createWindow() {
 
     // Register the global shortcut for Ctrl+R (refresh)
     globalShortcut.register('CommandOrControl+O', () => {
-        selectFile();
+        selectFile();        
     });
 
     // Register the global shortcut for Ctrl+Shift+I (toggle developer tools)
@@ -97,6 +97,12 @@ const createMenu = () => {
                 },
             ],
         },
+        {
+            label: "Edit",
+            submenu: [
+                { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+            ]
+        }
     ];
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
@@ -111,8 +117,6 @@ app.whenReady().then(() => {
 // Quit when all windows are closed
 app.on('window-all-closed', () => {
     app.quit();
-    // if (process.platform !== 'darwin') {
-    // }
 });
 
 // Activate (create) a window when the app is activated (clicked) in the Dock (macOS)

@@ -12,6 +12,7 @@ interface ISearchState {
 }
 
 // State
+let fileLoaded: boolean = false; 
 let records: { [key: string]: boolean }[] = [];
 let currentIndex: number = 0;
 let recordsPerPage: number = 10;
@@ -23,37 +24,84 @@ let searchState: ISearchState = {
 };
 
 // Modal
-let appWindow = document.getElementById('record-container') as HTMLElement;
+let appWindow = document.getElementById('app-window') as HTMLElement;
+let appContent = document.getElementById('app-content') as HTMLElement;
+let defaultContent = document.getElementById('default-content-container') as HTMLElement;
+let recordWindow = document.getElementById('record-container') as HTMLElement;
+
 let modal = document.getElementById('input-modal') as HTMLElement;
 let modalInput = document.getElementById('modal-input') as HTMLInputElement;
 let modalHeading = document.getElementById('modal-header') as HTMLElement;
 let modalInstructions = document.getElementById('modal-instructions') as HTMLElement;
 let modalOpen: boolean = false;
 
-// Open file dialog to choose a CSV file on startup
-ipcRenderer.send('open-csv');
+// On startup, place a copy of #default-content into #record-container
+showScreen('default');
+
+/**
+ * Show a particular screen for the app.
+ * - default: The default screen with instructions.
+ * - record: The screen with the record data.
+ * 
+ * @param screen The screen to show.
+ * @returns void
+ */
+function showScreen(screen: string) {
+    if (!defaultContent || !recordWindow) {
+        return;
+    }
+    switch (screen) {
+        case 'default':
+            defaultContent.style.display = 'flex';
+            recordWindow.style.display = 'none';
+            break;
+        case 'record':
+            defaultContent.style.display = 'none';
+            recordWindow.style.display = 'block';
+            break;
+    }
+}
 
 /**
  * Listen for changes to the file data and update the display.
  */
 ipcRenderer.on('file-data', (event: any, data: any) => {
     console.log(`File data changed, loading ${data.length} records...`);
-    showAlert(`${highlight(data.length)} records loaded.`);
+    if (!fileLoaded) {
+        showScreen('record');
+        fileLoaded = true;
+    }
     currentIndex = 0;
     setRecords(data);
     displayRecord(currentIndex);
+    showAlert(`${highlight(data.length)} records loaded.`);
+});
+
+// Add handler for clicks on open-file-btn
+document.getElementById('open-file-btn')?.addEventListener('click', () => {
+    ipcRenderer.send('open-csv');
 });
 
 /**
  * Handle files dragged onto app.
  */
-appWindow.addEventListener('dragover', (event: DragEvent) => {
-    console.log("Something dragged over");
-    console.log(event);
+appWindow?.addEventListener('dragover', (event: DragEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (event.dataTransfer) {
         event.dataTransfer.dropEffect = 'copy';
+        appWindow?.classList.add('dragover');
+    }
+});
+
+/**
+ * Handle when files are dragged off of app.
+ */
+appWindow?.addEventListener('dragleave', (event: DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer) {
+        appWindow?.classList.remove('dragover');
     }
 });
 
@@ -61,11 +109,10 @@ appWindow.addEventListener('dragover', (event: DragEvent) => {
  * Handle files dropped onto app.
  */
 appWindow?.addEventListener('drop', (event: DragEvent) => {
-    console.log("Something dropped!");
-    console.log(event);
     event.preventDefault();
     event.stopPropagation();
     if (event.dataTransfer) {
+        console.log(`A file was dropped onto the app window.`);
         const files = event.dataTransfer.files;
         console.log(files);
         if (files && files.length > 0) {
@@ -237,13 +284,12 @@ function displayRecord(index: number): void {
 
     updateButtonState();
 
-    const container = document.getElementById('record-container');
-    if (!container) {
+    if (!recordWindow) {
         return;
     }
 
     // Display current row number.
-    container.innerHTML = `<div id="record-number">${index + 1}</div>`;
+    recordWindow.innerHTML = `<div id="record-number">${index + 1}</div>`;
 
     // Display the CSV data.
     let innerTable = `<table id="record-display">`;
@@ -272,7 +318,7 @@ function displayRecord(index: number): void {
         }
     }
     innerTable += `</table>`;
-    container.innerHTML += innerTable;
+    recordWindow.innerHTML += innerTable;
 
     // Activate click on CSV columns
     const csvColumns = document.querySelectorAll('th.csv-column');
