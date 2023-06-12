@@ -10,6 +10,7 @@
     "main": "build/main.js",
     "scripts": {
         "start": "npm run prepare-assets && tsc-watch --onSuccess \"npm run start:electron\"",
+        "start:mac": "npm run prepare-assets && tsc -w & npm run start:electron",
         "start:electron": "electron ./build/main.js",
         "build": "tsc && npm run prepare-assets && electron-builder",
         "build:windows": "tsc && npm run prepare-assets && electron-builder --windows",
