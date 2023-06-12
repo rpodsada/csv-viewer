@@ -4,7 +4,7 @@
 cp src/index.html build/
 
 # Copy css/
-cp -r src/css/ build/
+cp -r src/css/ build/css/
 
 # Copy fonts/
-cp -r src/fonts/ build/
+cp -r src/fonts/ build/fonts/
