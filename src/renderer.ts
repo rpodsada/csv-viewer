@@ -23,6 +23,7 @@ let searchState: ISearchState = {
 };
 
 // Modal
+let appWindow = document.getElementById('record-container') as HTMLElement;
 let modal = document.getElementById('input-modal') as HTMLElement;
 let modalInput = document.getElementById('modal-input') as HTMLInputElement;
 let modalHeading = document.getElementById('modal-header') as HTMLElement;
@@ -41,6 +42,38 @@ ipcRenderer.on('file-data', (event: any, data: any) => {
     currentIndex = 0;
     setRecords(data);
     displayRecord(currentIndex);
+});
+
+/**
+ * Handle files dragged onto app.
+ */
+appWindow.addEventListener('dragover', (event: DragEvent) => {
+    console.log("Something dragged over");
+    console.log(event);
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'copy';
+    }
+});
+
+/**
+ * Handle files dropped onto app.
+ */
+appWindow?.addEventListener('drop', (event: DragEvent) => {
+    console.log("Something dropped!");
+    console.log(event);
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer) {
+        const files = event.dataTransfer.files;
+        console.log(files);
+        if (files && files.length > 0) {
+            const file = files[0];
+            // @ts-ignore (file.path does exist)
+            ipcRenderer.send('file-dropped', file.path); 
+        }
+    }
 });
 
 /**

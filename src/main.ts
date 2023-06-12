@@ -1,3 +1,4 @@
+import { readFile } from "fs";
 import { EventEmitter } from "stream";
 
 // main.js
@@ -60,7 +61,7 @@ function createWindow() {
 
     // Register the global shortcut for Ctrl+R (refresh)
     globalShortcut.register('CommandOrControl+O', () => {
-        openFile();
+        selectFile();
     });
 
     // Register the global shortcut for Ctrl+Shift+I (toggle developer tools)
@@ -81,7 +82,7 @@ const createMenu = () => {
             submenu: [
                 {
                     label: 'Open',
-                    click: openFile,
+                    click: selectFile,
                 },
                 { type: 'separator' },
                 {
@@ -120,11 +121,17 @@ app.on('activate', () => {
 // Open file dialog and handle selected file
 ipcMain.on('open-csv', async () => {
     console.log("main: received open-csv ipc event");
-    await openFile();
+    await selectFile();
 });
 
 // Open file dialog and handle selected file
-const openFile = async () => {
+ipcMain.on('file-dropped', async (event: Event, filePath: string) => {
+    console.log("main: received file-dropped ipc event");
+    await loadFile(filePath);
+});
+
+// Open file dialog to pick a file.
+const selectFile = async () => {
     console.log("openFile called.");
     if (fileDialogOpen) {
         console.log("File dialog already open, doing nothing.");
@@ -139,23 +146,26 @@ const openFile = async () => {
     fileDialogOpen = false;
     if (!filePaths || filePaths.length === 0 || !filePaths[0]) {
         console.log("No file chosen in dialog. Doing nothing.");
-        
         return null;
     }
+    loadFile(filePaths[0]);
+};
 
-    const filePath = filePaths[0];
+/**
+ * Load the provided file.
+ */
+const loadFile = async (filePath: string): Promise<any> => {
     console.log(`Opening ${filePath}...`);
     const file = fs.readFileSync(filePath, 'utf8');
     const data = Papa.parse(file, { header: true });
-    
     setWindowTitle(filePath);
     watchFile(filePath);
     mainWindow.webContents.send('file-data', data.data);
-};
+}
 
 // Watches the file at filePath for changes, 
 // and triggers sending new data if it changed.
-function watchFile(filePath: string): void {
+function watchFile(filePath: string) {
     console.log(`Setting watch on ${filePath}.`);
     fs.watch(filePath, (eventType: string) => {
         console.log(`watch [${filePath}]: ${eventType} fired.`);
