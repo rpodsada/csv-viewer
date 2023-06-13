@@ -30,24 +30,13 @@
             "target": "nsis",
             "icon": "icons/win/icon.ico"
         },
-        "mac": {
-            "target": "dmg",
-            "icon": "icons/mac/icon.icns"
-        },
-        "linux": {
-            "category": "Utility",
-            "icon": "icons/linux/512x512.png",
-            "target": [
-                "AppImage",
-                "deb"
-            ]
-        },
         "nsis": {
             "oneClick": false,
             "allowToChangeInstallationDirectory": true
         },
-        "deb": {
-            "maintainer": "${author}"
+        "mac": {
+            "target": "dmg",
+            "icon": "icons/mac/icon.icns"
         },
         "dmg": {
             "contents": [
@@ -63,6 +52,17 @@
                     "path": "/Applications"
                 }
             ]
+        },
+        "linux": {
+            "category": "Utility",
+            "icon": "icons/linux/512x512.png",
+            "target": [
+                "AppImage",
+                "deb"
+            ]
+        },
+        "deb": {
+            "maintainer": "${author}"
         },
         "files": [
             "./build/**/*",
