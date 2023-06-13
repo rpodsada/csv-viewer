@@ -351,7 +351,7 @@ function displayRecord(index: number) {
                 return;
             }
             require('electron').clipboard.writeText(cellContent);
-            showAlert('Value copied to clipboard.');
+            showAlert(`${highlight(fieldName)} copied to clipboard.`);
         });
     });
 
