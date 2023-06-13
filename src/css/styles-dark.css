@@ -1,3 +1,9 @@
+/*************************************************
+ * Font Imports
+ *************************************************/
+ 
+/* #region Font Imports */
+
 @font-face {
     font-family: 'Consolas';
     src: url('../fonts/consola.ttf') format('truetype');
@@ -25,6 +31,8 @@
     font-weight: bold;
     font-style: italic;
 }
+
+/* #endregion */
 
 /*************************************************
  * Main App
@@ -141,6 +149,7 @@ input.active.focus {
     position: fixed;
     top: 10px;
     right: 25px;
+    z-index: 1000;
 }
 
 #record-display {
@@ -159,7 +168,7 @@ input.active.focus {
     vertical-align: top;
     font-size: 14px;
     font-family: 'Consolas', monospace;
-    color: #abb2bf;    
+    color: #abb2bf;
 }
 
 #record-display th {
@@ -188,7 +197,7 @@ input.active.focus {
 
 #record-display td.data-column span.copied-alert {
     display: inline-block;
-    color:#caa621;
+    color: #caa621;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     border-radius: 5px;
