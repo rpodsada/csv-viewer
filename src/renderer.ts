@@ -298,7 +298,7 @@ function displayRecord(index: number) {
             innerTable += `
                 <tr>
                     <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                    <td class="data-column" data-column-name="${key}">
+                    <td class="data-column html-column" data-column-name="${key}">
                         <div class="collapsible-cell ${isCollapsed ? 'collapsed' : ''}">
                             <button class="collapse-expand-btn">${isCollapsed ? arrowDown : arrowUp}</button>
                             <div class="collapsible-content" ${isCollapsed ? ' style="height: 1.2em; overflow: hidden;"' : ''}>
@@ -311,7 +311,9 @@ function displayRecord(index: number) {
             innerTable += `
                 <tr>
                     <th class="csv-column" title="Click to search this field" data-column-name="${key}">${key}</th>
-                    <td class="data-column" data-column-name="${key}">${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}</td>
+                    <td class="data-column" data-column-name="${key}">
+                        ${highlightSearchTerm(key, cellContent, getSearchTerm(), getSearchColumn())}
+                    </td>
                 </tr>`;
         }
     }
@@ -335,13 +337,36 @@ function displayRecord(index: number) {
         });
     });
 
-    // Activate click on CSV data columns.
-    const dataColumns = document.querySelectorAll('td.data-column');
-    dataColumns.forEach((element) => {
-        element.addEventListener('click', (event) => {
-            event.preventDefault();
-            // Get the name of the field from the data-column-name attribute.
-            const cell = (event.target as Element)?.closest('td');
+    // Add event listener to the parent table element and delegate
+    // the events to the appropriate handlers.
+    document.querySelector('#record-display')?.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const targetElement = event.target as Element;
+
+        // Check if the click was on a collapse/expand button
+        const button = targetElement.closest('.collapse-expand-btn');
+        if (button) {
+            const row = button.closest('tr');
+            const [key, collapsibleContent, collapsibleCell] = [
+                row?.querySelector('th')?.getAttribute('data-column-name'),
+                row?.querySelector('.collapsible-content') as HTMLElement,
+                button.parentElement
+            ];
+            if (!row || !key || !collapsibleContent || !collapsibleCell) {
+                return;
+            }
+
+            const isCollapsed = collapsibleCell.classList.contains('collapsed');
+
+            collapsibleCell.classList.toggle('collapsed');
+            button.innerHTML = isCollapsed ? arrowUp : arrowDown;
+            collapsibleContent.style.height = isCollapsed ? 'auto' : '1.2em';
+            collapsibleContent.style.overflow = isCollapsed ? 'visible' : 'hidden';
+            collapsedState[key] = !isCollapsed;
+        } else if (targetElement.closest('td.data-column')) {
+            // Get the name of the field from the data-column-name attribute
+            const cell = targetElement.closest('td');
             const fieldName = cell?.getAttribute('data-column-name');
             if (!fieldName) {
                 return;
@@ -351,30 +376,16 @@ function displayRecord(index: number) {
                 return;
             }
             require('electron').clipboard.writeText(cellContent);
-            showAlert(`${highlight(fieldName)} copied to clipboard.`);
-        });
-    });
-
-    // Add event listener to the parent table element using event delegation
-    document.querySelector('#record-display')?.addEventListener('click', (event) => {
-        const button = (event.target as Element)?.closest('.collapse-expand-btn');
-        const row = button?.closest('tr');
-        const [key, collapsibleContent, collapsibleCell] = [
-            row?.querySelector('th')?.getAttribute('data-column-name'),
-            row?.querySelector('.collapsible-content') as HTMLElement,
-            button?.parentElement
-        ];
-        if (!button || !row || !key || !collapsibleContent || !collapsibleCell) {
-            return;
+            
+            // Display an alert that the content is copied
+            const alert = document.createElement('span');
+            alert.classList.add('copied-alert');
+            alert.innerHTML = `<i class="fas fa-check"></i> Copied`;
+            cell?.appendChild(alert);
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
         }
-        
-        const isCollapsed = collapsibleCell.classList.contains('collapsed');
-
-        collapsibleCell.classList.toggle('collapsed');
-        button.innerHTML = isCollapsed ? arrowUp : arrowDown;
-        collapsibleContent.style.height = isCollapsed ? 'auto' : '1.2em';
-        collapsibleContent.style.overflow = isCollapsed ? 'visible' : 'hidden';
-        collapsedState[key] = !isCollapsed;
     });
 }
 
