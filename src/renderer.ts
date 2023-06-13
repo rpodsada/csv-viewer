@@ -377,6 +377,10 @@ function displayRecord(index: number) {
             collapsibleContent.style.overflow = isCollapsed ? 'visible' : 'hidden';
             collapsedState[key] = !isCollapsed;
         } else if (targetElement.closest('td.data-column')) {
+            // Only copy if no text is selected. Otherwise, the user may be trying to copy text.
+            if (window.getSelection()?.toString()) {
+                return;
+            }
             // Get the name of the field from the data-column-name attribute
             const cell = targetElement.closest('td');
             const fieldName = cell?.getAttribute('data-column-name');
