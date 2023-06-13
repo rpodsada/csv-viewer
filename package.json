@@ -9,7 +9,7 @@
     "copyright": "Copyright (c) 2023 ${author}",
     "main": "build/main.js",
     "scripts": {
-        "start": "NODE_ENV=development concurrently \"npm run watch-ts\" \"npm run watch-css\"",
+        "start": "cross-env NODE_ENV=development concurrently \"npm run watch-ts\" \"npm run watch-css\"",
         "electron": "electron ./build/main.js",
         "build": "tsc && npm run prepare && electron-builder",
         "build-windows": "tsc && npm run prepare && electron-builder --windows",
@@ -84,6 +84,7 @@
         "@types/papaparse": "^5.3.7",
         "chokidar-cli": "^3.0.0",
         "concurrently": "^8.2.0",
+        "cross-env": "^7.0.3",
         "electron": "^25.1.0",
         "electron-builder": "^24.4.0",
         "electron-reload": "^2.0.0-alpha.1",
