@@ -39,6 +39,14 @@ let modalOpen: boolean = false;
 showScreen('default');
 
 /**
+ * Handle file-error event, display alert
+ */
+ipcRenderer.on('file-error', (event: any, error: any) => {
+    console.log(`File error: ${error}`);
+    showAlert(error);
+});
+
+/**
  * Listen for changes to the file data and update the display.
  */
 ipcRenderer.on('file-data', (event: any, data: any) => {
@@ -96,6 +104,10 @@ appWindow?.addEventListener('drop', (event: DragEvent) => {
         console.log(files);
         if (files && files.length > 0) {
             const file = files[0];
+            if (file.type !== 'text/csv') {
+                showAlert(`Sorry, only CSV files are supported.`);
+                return;
+            }
             // @ts-ignore (file.path does exist)
             ipcRenderer.send('file-dropped', file.path); 
         }
