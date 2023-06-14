@@ -63,15 +63,15 @@ Build for Your Current Platform:
 ```
 npm run build-windows
 ```
-Windows (.exe):
+Windows `.exe`
 ```
 npm run build-windows
 ```
-Mac (.dmg):
+Mac `.dmg`
 ```
 npm run build-mac
 ```
-Linux (.deb, .AppImage):
+Linux `.deb` `.AppImage`
 ```
 npm run build-linux
 ```
