@@ -1,7 +1,7 @@
 {
     "name": "csv-viewer",
     "productName": "CSV Viewer",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "homepage": "https://www.github.com/rpodsada/csv-viewer#readme",
     "description": "A simple form-style viewer to inspect records in a CSV file.",
     "author": "Richard Podsada <rpodsada@gmail.com> (https://www.github.com/rpodsada)",
