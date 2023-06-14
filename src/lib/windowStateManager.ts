@@ -3,6 +3,11 @@ import { BrowserWindow } from 'electron';
 
 const store = new Store();
 
+/**
+ * Persists the window state (size & position) between sessions.
+ * 
+ * @param mainWindow 
+ */
 export const windowStateManager = (mainWindow: BrowserWindow): void => {
     let windowState = store.get('windowState') || { width: 1000, height: 600 };
 
@@ -18,7 +23,6 @@ export const windowStateManager = (mainWindow: BrowserWindow): void => {
         windowState = mainWindow.getBounds();
         store.set('windowState', windowState);
     });
-
     mainWindow.on('move', () => {
         windowState = mainWindow.getBounds();
         store.set('windowState', windowState);
