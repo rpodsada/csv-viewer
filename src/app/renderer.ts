@@ -383,26 +383,34 @@ function displayRecord(index: number) {
             }
             // Get the name of the field from the data-column-name attribute
             const cell = targetElement.closest('td');
+            if (!cell) {
+                return;
+            }
             const fieldName = cell?.getAttribute('data-column-name');
             if (!fieldName) {
                 return;
             }
             const cellContent = record[fieldName];
             if (!cellContent) {
+                displayCellAlert(cell, `<i class="fas fa-times"></i> Empty`);
                 return;
             }
             require('electron').clipboard.writeText(cellContent);
             
             // Display an alert that the content is copied
-            const alert = document.createElement('span');
-            alert.classList.add('copied-alert');
-            alert.innerHTML = `<i class="fas fa-check"></i> Copied`;
-            cell?.appendChild(alert);
-            setTimeout(() => {
-                alert.remove();
-            }, 500);
+            displayCellAlert(cell, `<i class="fas fa-check"></i> Copied`);
         }
     });
+}
+
+function displayCellAlert(cell: HTMLTableCellElement, message: string, timeout: number = 500) {
+    const alert = document.createElement('span');
+    alert.classList.add('cell-alert');
+    alert.innerHTML = `${message}`;
+    cell.appendChild(alert);
+    setTimeout(() => {
+        alert.remove();
+    }, timeout);
 }
 
 /**
