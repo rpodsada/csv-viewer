@@ -63,26 +63,20 @@ Build for Your Current Platform:
 ```
 npm run build-windows
 ```
-Windows:
+Windows (.exe):
 ```
 npm run build-windows
 ```
-Mac:
+Mac (.dmg):
 ```
 npm run build-mac
 ```
-Linux:
+Linux (.deb, .AppImage):
 ```
 npm run build-linux
 ```
 
 The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
-
-Outputs `exe`, `dmg`, `deb`, and `AppImage` formats for each respective platform.
-
-## Installing a Pre-Built Binary
-
-Pre-built binaries for the application are not yet published anywhere. On my to-do list.
 
 ## Background 
 
