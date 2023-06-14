@@ -16,8 +16,30 @@ npm start
 ```
 - The app was built with Node v16.20.0. Later versions may work too, but haven't been tested.
 - Hot reload is setup with `nodemon` & `electron-reload`
+    - If it can't find nodemon:
+        ```
+        npm install -g nodemon
+        ```
 - Instructions on how to [compile a binary](#compiling-a-binary) are below.
 
+## Compiling a Binary
+
+Build for Your Current Platform:
+```
+npm run build-windows
+```
+Windows `.exe`
+```
+npm run build-windows
+```
+Mac `.dmg`
+```
+npm run build-mac
+```
+Linux `.deb` `.AppImage`
+```
+npm run build-linux
+```
 ## Advantages
 
 1. Presents data in a form layout, one row per page
@@ -57,24 +79,6 @@ It's useful for reviewing CSV files like:
 Excel (and other table-format viewers) are best for reviewing the _consistency_ of the data across rows. 
 This tool is best to review the _quality_ of the data in each row.
 
-## Compiling a Binary
-
-Build for Your Current Platform:
-```
-npm run build-windows
-```
-Windows `.exe`
-```
-npm run build-windows
-```
-Mac `.dmg`
-```
-npm run build-mac
-```
-Linux `.deb` `.AppImage`
-```
-npm run build-linux
-```
 
 The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
 
