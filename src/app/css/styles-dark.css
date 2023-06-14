@@ -1,14 +1,14 @@
 /*************************************************
  * Font Imports
  *************************************************/
- 
+
 /* #region Font Imports */
 
 @font-face {
     font-family: 'Consolas';
     src: url('../fonts/consola.ttf') format('truetype');
     font-weight: normal;
-    font-style: normal; 
+    font-style: normal;
 }
 
 @font-face {
@@ -93,8 +93,7 @@ input.active.focus {
 }
 
 #app-window.dragover {
-    filter: brightness(1.1);
-    /* background: #2c323d; */
+    filter: brightness(1.2);
 }
 
 #app-content {
@@ -137,6 +136,11 @@ input.active.focus {
     border: 3px dashed #4e4e4e;
 }
 
+#default-content #open-file-btn {
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
 #app-toolbar {
     position: absolute;
     left: 0;
@@ -152,8 +156,8 @@ input.active.focus {
 
 #record-number {
     display: inline-block;
-    background:#4b5363;
-    opacity:0.6;
+    background: #4b5363;
+    opacity: 0.6;
     color: #fff;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
@@ -188,7 +192,7 @@ input.active.focus {
     font-weight: bold;
     background: #292929;
     border-color: #343434;
-    color:#61afef;
+    color: #61afef;
     cursor: pointer;
     text-align: right;
     width: 20%;
@@ -209,9 +213,9 @@ input.active.focus {
     cursor: pointer;
 }
 
-#record-display td.data-column span.copied-alert {
+#record-display td.data-column span.cell-alert {
     display: inline-block;
-    color: #caa621;
+    color: #4b5363;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     border-radius: 5px;
@@ -221,7 +225,7 @@ input.active.focus {
     right: 10px;
 }
 
-#record-display td.html-column span.copied-alert {
+#record-display td.html-column span.cell-alert {
     right: 80px;
     top: 0.6em;
     transform: none;
