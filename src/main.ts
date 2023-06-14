@@ -55,7 +55,7 @@ function createWindow() {
     windowStateManager(mainWindow);
 
     // Load the our app into the window
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 
     // Register the global shortcut for Ctrl+0 (reset zoom)
     globalShortcut.register('CommandOrControl+0', () => {

@@ -9,15 +9,17 @@
     "copyright": "Copyright (c) 2023 ${author}",
     "main": "build/main.js",
     "scripts": {
-        "start": "cross-env NODE_ENV=development concurrently \"npm run watch-ts\" \"npm run watch-css\"",
-        "electron": "electron ./build/main.js",
+        "start": "cross-env NODE_ENV=development concurrently \"npm run watch-ts\" \"npm run watch-assets\"",
+        "watch-ts": "nodemon --watch \"src/**\" --ext \"ts\" --exec \"npm run preview\"",
+        "watch-assets": "nodemon --watch \"src/app/**\" --ext \"css,html\" --exec \"npm run prepare\"",
+        "prepare": "sh prepare-assets.sh",
+        "preview": "npm run prepare && tsc && electron ./build/main.js",
+        "watch-main": "nodemon --watch \"src/**\" --ext \"ts\" --ignore \"src/app/**\" --exec \"npm run preview\"",
+        "watch-app": "nodemon --watch \"src/app/**\" --ext \"ts\" --exec \"tsc --build --verbose\"",
         "build": "tsc && npm run prepare && electron-builder",
         "build-windows": "tsc && npm run prepare && electron-builder --windows",
         "build-mac": "tsc && npm run prepare && electron-builder --mac",
-        "build-linux": "tsc && npm run prepare && electron-builder --linux",
-        "watch-ts": "tsc-watch --onSuccess \"npm run electron\"",
-        "watch-css": "npx chokidar './src/**/*.css' -c 'npm run prepare'",
-        "prepare": "sh prepare-assets.sh"
+        "build-linux": "tsc && npm run prepare && electron-builder --linux"
     },
     "build": {
         "appId": "com.richardpodsada.csv-viewer",
@@ -82,13 +84,12 @@
     "devDependencies": {
         "@types/node": "^20.3.0",
         "@types/papaparse": "^5.3.7",
-        "chokidar-cli": "^3.0.0",
         "concurrently": "^8.2.0",
         "cross-env": "^7.0.3",
         "electron": "^25.1.0",
         "electron-builder": "^24.4.0",
         "electron-reload": "^2.0.0-alpha.1",
-        "tsc-watch": "^6.0.4",
+        "nodemon": "^2.0.22",
         "typescript": "^5.1.3"
     }
 }
