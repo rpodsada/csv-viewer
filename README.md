@@ -3,6 +3,8 @@
 CSV Viewer is a minimal utility built in TypeScript & Electron to quickly and easily inspect the contents
 of a CSV file. It's [particulary useful](#primary-use-cases) for inspecting CSV's that contain HTML.
 
+![Application Screenshot](https://github.com/rpodsada/csv-viewer/blob/development/screenshot/screenshot.png?raw=true)
+
 ## Starting the App
 
 Clone the repository and:
