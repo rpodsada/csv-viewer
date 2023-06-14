@@ -1,13 +1,10 @@
-// Third party imports
 import { app, dialog, Menu, BrowserWindow, ipcMain, IpcMainEvent, globalShortcut, MenuItemConstructorOptions } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import Papa from 'papaparse';
-
-// Local imports
 import windowStateManager from './lib/windowStateManager';
 
-// Reload app on changes.
+// Reload app on changes in dev.
 if (process.env.NODE_ENV === 'development') {
     require('electron-reload')(__dirname, {
         electron: require(path.join(
@@ -20,7 +17,9 @@ if (process.env.NODE_ENV === 'development') {
     });
 }
 
-// Used to set window title.
+// Should be pulled from package.json but
+// had trouble getting value when compiled.
+// @todo fix this to come from package.json
 const appTitle = 'CSV Viewer';
 
 let mainWindow: BrowserWindow | null = null;
