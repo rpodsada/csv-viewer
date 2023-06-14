@@ -5,15 +5,17 @@ of a CSV file. It's [particulary useful](#primary-use-cases) for inspecting CSV'
 
 ![Application Screenshot](https://github.com/rpodsada/csv-viewer/blob/development/screenshot/screenshot.png?raw=true)
 
-## Starting the App
+## Starting a Development Environment
 
 Clone the repository and:
 ```
 cd path/to/csv-viewer/
 nvm use 16
-npm install && npm start
+npm install
+npm start
 ```
 - The app was built with Node v16.20.0. Later versions may work too, but haven't been tested.
+- Hot reload is setup with `nodemon` & `electron-reload`
 - Instructions on how to [compile a binary](#compiling-a-binary) are below.
 
 ## Advantages
@@ -57,17 +59,21 @@ This tool is best to review the _quality_ of the data in each row.
 
 ## Compiling a Binary
 
+Build for Your Current Platform:
+```
+npm run build-windows
+```
 Windows:
 ```
-npm run build:windows
+npm run build-windows
 ```
 Mac:
 ```
-npm run build:mac
+npm run build-mac
 ```
 Linux:
 ```
-npm run build:linux
+npm run build-linux
 ```
 
 The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
