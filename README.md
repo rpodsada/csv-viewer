@@ -68,6 +68,12 @@ npm run build-linux
 - `Home` - First Record
 - `End` - Last Record
 
+## Mouse Actions
+
+- Click on a column header to search for text in that column
+- Click on a value cell to copy the contents to your clipboard
+- Use the Expand/Collapse button to toggle the visibility of HTML columns
+
 ## Primary use cases
 
 It's useful for reviewing CSV files like:
@@ -78,7 +84,6 @@ It's useful for reviewing CSV files like:
 
 Excel (and other table-format viewers) are best for reviewing the _consistency_ of the data across rows. 
 This tool is best to review the _quality_ of the data in each row.
-
 
 The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
 
