@@ -5,6 +5,18 @@ of a CSV file. It's [particulary useful](#primary-use-cases) for inspecting CSV'
 
 ![Application Screenshot](https://github.com/rpodsada/csv-viewer/blob/development/screenshot/screenshot.png?raw=true)
 
+## Table of Contents
+
+- [Starting a Development Environment](#starting-a-development-environment)
+- [Compiling a Binary](#compiling-a-binary)
+- [Primary Use Cases](#primary-use-cases)
+- [Advantages](#advantages)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Mouse Actions](#mouse-actions)
+- [Project Background](#project-background)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Starting a Development Environment
 
 Clone the repository and:
@@ -40,6 +52,19 @@ Linux `.deb` `.AppImage`
 ```
 npm run build-linux
 ```
+The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
+
+## Primary use cases
+
+This tool is most useful for reviewing CSV files like:
+- Output from a web scraper
+- Website import/export data
+- Any CSV containing HTML
+- Any CSV where you want to inspect the quality of the data
+
+Excel (and other table-format viewers) are best for reviewing the _consistency_ of the data across rows. 
+This tool is best to review the _quality_ of the data in each row.
+
 ## Advantages
 
 1. Presents data in a form layout, one row per page
@@ -74,20 +99,7 @@ npm run build-linux
 - Click on a value cell to copy the contents to your clipboard
 - Use the Expand/Collapse button to toggle the visibility of HTML columns
 
-## Primary use cases
-
-It's useful for reviewing CSV files like:
-- Output from a web scraper
-- Website import/export data
-- Any CSV containing HTML
-- Any CSV where you want to inspect the quality of the data
-
-Excel (and other table-format viewers) are best for reviewing the _consistency_ of the data across rows. 
-This tool is best to review the _quality_ of the data in each row.
-
-The binary installation files will be output to the `dist/` folder as `csv-viewer-setup-x.x.x.ext`.
-
-## Background 
+## Project Background 
 
 I originally developed this tool for reviewing the CSV output of a web scraper application. During the development process, I needed to inspect the output of the CSV, particularly the HTML columns (since I was cleaning it up), countless times throughout the day.
 
