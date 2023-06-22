@@ -84,16 +84,22 @@ The binary installation files will be output to the `dist/` folder as `csv-viewe
 
 ## Background 
 
-I originally developed this tool for reviewing the CSV output of a web scraper application. During the development process, I needed
-to inspect the output of the CSV, particularly the HTML columns (since I was cleaning it up), countless times throughout the day.
+I originally developed this tool for reviewing the CSV output of a web scraper application. During the development process, I needed to inspect the output of the CSV, particularly the HTML columns (since I was cleaning it up), countless times throughout the day.
 
-I found myself increasingly frustrated with the tools available to view the file.
-Working on a Mac, Excel is clunky and slow for this, doesn't present the data very nicely, and requires many extra clicks
-to close and reload the file after an update. On a PC, the scraper can't update the file at all if it's open in Excel, 
-since Excel locks the files. This meant a very frustrating process to refresh the data each time the scraper was tested.
+I found myself increasingly frustrated with the tools available to view the file. Working on a Mac, Excel is clunky and slow for this, doesn't present the data very nicely, and requires many extra clicks to close and reload the file after an update. On a PC, the scraper can't update the file at all if it's open in Excel, since Excel locks the files. This meant a very frustrating process to refresh the data each time the scraper was tested.
 
-vscode (with extensions) offers a nicer experience when it comes to refreshing the data, however, most of these present the data
-in a table format, and in particular, did not make it easy to inspect the quality of the HTML data in the sheet.
+vscode (with extensions) offers a nicer experience when it comes to refreshing the data, however, most of these present the data in a table format, and in particular, did not make it easy to inspect the quality of the HTML data in the sheet.
 
-Thus, I decided to create an app that allows you to clearly view and inspect the HTML content of the file and 
-presents minimal barriers and hassle in loading, navigating, and refreshing the data.
+Thus, I decided to create an app that allows you to clearly view and inspect the HTML content of the file and presents minimal barriers and hassle in loading, navigating, and refreshing the data. I found it useful during my project, maybe you'll find it useful for yours too!
+
+## License & Copyright
+
+Copyright (c) 2023 Richard Podsada.
+
+This software is released under the MIT License. See [LICENSE](LICENSE.txt) file 
+for details.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
