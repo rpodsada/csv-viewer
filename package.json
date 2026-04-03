@@ -86,8 +86,8 @@
         "@types/papaparse": "^5.3.7",
         "concurrently": "^8.2.0",
         "cross-env": "^7.0.3",
-        "electron": "~35.7.5",
-        "electron-builder": "^24.4.0",
+        "electron": "^41.1.1",
+        "electron-builder": "^26.8.1",
         "electron-reload": "^2.0.0-alpha.1",
         "nodemon": "^3.1.11",
         "typescript": "^5.1.3"
