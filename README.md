@@ -39,8 +39,7 @@ npm start
 npm run build
 ```
 ### Building a Windows `.exe`:
-> Note 1: It's ideal to run the build process in the Git Bash terminal on windows because the prepare step requires `sh`. This likely won't build from PowerShell or Cmd.
-> Note 2: The app builds but doesn't start for me in WSL2 on Windows with WSLg & Ubuntu 22.04. There seem to be conflicts with Electron and WSL's libraries. If you experience this, either build the Windows version or build on Linux proper.
+> Note: It's ideal to run the build process in the Git Bash terminal on windows because the prepare step requires `sh`. This likely won't build from PowerShell or Cmd.
 ```
 npm run build-windows
 ```
@@ -49,6 +48,7 @@ npm run build-windows
 npm run build-mac
 ```
 ### Building a Linux `.deb` `.AppImage`
+> Note 2: The app builds but doesn't start for me in WSL2 on Windows with WSLg & Ubuntu 22.04. There seem to be conflicts with Electron and WSL's libraries. If you experience this, either build the Windows version or build on Linux proper. I haven't tried running the built app on another Linux distro to see if a WSL2 build will still work on Linux proper.
 ```
 npm run build-linux
 ```
