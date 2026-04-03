@@ -111,7 +111,7 @@ Thus, I decided to create an app that allows you to clearly view and inspect the
 
 ## License & Copyright
 
-Copyright (c) 2023 Richard Podsada.
+Copyright (c) 2023-2026 Richard Podsada.
 
 This software is released under the MIT License. See [LICENSE](LICENSE.txt) file 
 for details.
