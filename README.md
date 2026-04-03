@@ -22,11 +22,9 @@ of a CSV file. It's [particulary useful](#primary-use-cases) for inspecting CSV'
 Clone the repository and:
 ```
 cd path/to/csv-viewer/
-nvm use 16
 npm install
 npm start
 ```
-- The app was built with Node v16.20.0. Later versions may work too, but haven't been tested.
 - Hot reload is setup with `nodemon` & `electron-reload`
     - If it can't find nodemon:
         ```
@@ -36,19 +34,21 @@ npm start
 
 ## Compiling a Binary
 
-Build for Your Current Platform:
+### Build for Your Current Platform:
+```
+npm run build
+```
+### Building a Windows `.exe`:
+> Note 1: It's ideal to run the build process in the Git Bash terminal on windows because the prepare step requires `sh`. This likely won't build from PowerShell or Cmd.
+> Note 2: The app builds but doesn't start for me in WSL2 on Windows with WSLg & Ubuntu 22.04. There seem to be conflicts with Electron and WSL's libraries. If you experience this, either build the Windows version or build on Linux proper.
 ```
 npm run build-windows
 ```
-Windows `.exe`
-```
-npm run build-windows
-```
-Mac `.dmg`
+### Building a Mac `.dmg`
 ```
 npm run build-mac
 ```
-Linux `.deb` `.AppImage`
+### Building a Linux `.deb` `.AppImage`
 ```
 npm run build-linux
 ```
